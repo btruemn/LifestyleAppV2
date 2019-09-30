@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">LifestyleApp</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="bmi_description">
+        BMI or Body Mass Index is an indirect measure of your body composition — or how much
+        body fat you have. Although BMI doesn\'t measure body fat directly, it uses your weight and
+        height to determine whether you\'re classified as underweight, normal weight, overweight, or
+        obese. BMI is measured by dividing your weight in pounds by the square of your height in
+        inches, then multiplying by 703. BMI = (weight / height * height) * 703.
+    </string>
+
+    <string name="bmr_description">
+        BMR or Basal Metabolic Rate is the number of calories your body burns at rest to do basic
+        functions like breathing, digesting, keeping your heart beating, and all of the other
+        physiological tasks that keep you alive. Your BMR is partly determined by genetics, but
+        other factors, like your body composition and activity level, may also have an effect on
+        your BMR. There are equations used to determine your BMR, and they differ based on whether
+        you\'re a man or a woman. BMR can be calculated with the Harris-Benedict equation.
+    </string>
+
+    <string name="sedentary">*Sedentary (little or no exercise)</string>
+    <string name="lightly_active">*Lightly-Active (light exercise/sports 1-3 days/week) </string>
+    <string name="active">*Active: (moderate exercise/sports 3-5 days/week)  </string>
+    <string name="very_active">*Very Active: (hard exercise/sports 6-7 days/week)  </string>
+    <string name="extra_active">*Extra-Active: (hard exercise/sports &amp; physical job) </string>
+
+
+
+</resources>

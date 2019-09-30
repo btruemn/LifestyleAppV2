@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/userSelectionFragment"
+    tools:context=".controller.UserSelectionFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:id="@+id/userSelectionLayout"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        >
+    <TextView
+        android:id="@+id/newUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:text="Create New Profile:"
+        android:textColor="@color/colorWhite"
+        android:textSize="20dp" />
+
+    <Button
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:background="@color/colorButtonBlue"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/registerNewUserButton"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Register new user" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:text="Select Existing Profile:"
+        android:textColor="@color/colorWhite"
+        android:textSize="20dp" />
+    </LinearLayout>
+
+</FrameLayout>
