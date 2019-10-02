@@ -4,9 +4,12 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class UserRepository {
 
@@ -20,16 +23,27 @@ public class UserRepository {
         allUsers = userDao.getAll();
     }
 
-    LiveData<List<User>> getAllUsers() {
+    public LiveData<List<User>> getAllUsers() {
         return allUsers;
     }
 
-    LiveData<List<String>> getAllUserNames(){
+    public LiveData<List<String>> getAllUserNames(){
         List<String> names = new ArrayList<>();
-        for(User user: allUsers.getValue()){
-            names.add(user.getName());
+        if(allUsers.getValue() != null) {
+            for (User user : allUsers.getValue()) {
+                names.add(user.getName());
+            }
         }
-        return (LiveData<List<String>>) names;
+        return new MutableLiveData(names);
+    }
+
+    public LiveData<Boolean> nameAlreadyExists(String name){
+        return new MutableLiveData<>(getAllUserNames().getValue().contains(name));
+    }
+
+    public LiveData<Boolean> usersExist(){
+        if(allUsers.getValue() == null) return new MutableLiveData<>(false);
+        else return new MutableLiveData<>(!allUsers.getValue().isEmpty());
     }
 
     LiveData<User> getActiveUser(String name){
@@ -38,6 +52,7 @@ public class UserRepository {
     }
 
     public void insert (User user) {
+//        userDao.insert(user);
         new insertAsyncTask(userDao).execute(user);
     }
 
@@ -55,6 +70,7 @@ public class UserRepository {
 
         @Override
         protected Void doInBackground(final User... params) {
+            System.out.println("IN BACKGROUND: " + params[0].toString());
             mAsyncTaskDao.insert(params[0]);
             return null;
         }

@@ -17,19 +17,22 @@ import android.widget.Toast;
 import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
+import com.msd.lifestyleapp.model.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 public class RegistrationActivity extends AppCompatActivity implements TextView.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private TextView nameTextView, passwordTextView, confirmPasswordTextView;
     private Spinner heightSpinner, weightSpinner, sexSpinner;
-    private SharedPreferencesHandler prefs;
+//    private SharedPreferencesHandler prefs;
     private String name, password, confirmPassword, dob, height, weight, sex;
+    private UserViewModel userViewModel;
 
     int year, month, day;
 
@@ -84,7 +87,10 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
 
         findViewById(R.id.submitButton).setOnClickListener(this);
 
-        prefs = new SharedPreferencesHandler(this);
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+//        prefs = new SharedPreferencesHandler(this);
     }
 
     public static ArrayList<String> getAges() {
@@ -116,7 +122,7 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
     @Override
     public void onBackPressed() {
 
-        if (prefs.usersExist()) {
+        if (userViewModel.usersExist().getValue()) {
             super.onBackPressed();
             return;
         }
@@ -144,7 +150,8 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
 
                 //storing all of the user's values in shared preferences
                 User user = new User(name, dob, height, Integer.parseInt(weight), sex, password);
-                prefs.addUser(user);
+                userViewModel.insert(user);
+//                prefs.addUser(user);
                 System.out.println("User " + name + " added!");
 
                 //here we will start the new intent to the user selection page
@@ -235,7 +242,7 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
     }
 
     public boolean nameAlreadyExists() {
-        if (prefs.nameAlreadyExists(name)) {
+        if (userViewModel.nameAlreadyExists(name).getValue()) {
             Toast.makeText(this, "Name is already taken.", Toast.LENGTH_SHORT).show();
             return true;
         }

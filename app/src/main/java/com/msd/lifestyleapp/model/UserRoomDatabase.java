@@ -16,11 +16,11 @@ public abstract class UserRoomDatabase extends RoomDatabase {
     //create Singleton instance of DB
     public static UserRoomDatabase getDatabase(final Context context) {
         if (userRoomInstance == null) {
-            synchronized (userRoomInstance) {
+            //synchronized (userRoomInstance) {
                 if (userRoomInstance == null) {
                     userRoomInstance = Room.databaseBuilder(context.getApplicationContext(), UserRoomDatabase.class, "user_database").build();
                 }
-            }
+            //}
         }
         return userRoomInstance;
     }

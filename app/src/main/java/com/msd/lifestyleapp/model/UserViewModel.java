@@ -7,6 +7,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class UserViewModel extends AndroidViewModel {
 
@@ -19,11 +20,11 @@ public class UserViewModel extends AndroidViewModel {
         mRepository = new UserRepository(application);
     }
 
-    LiveData<List<User>> getAllUsers() {
+    public LiveData<List<User>> getAllUsers() {
         return mRepository.getAllUsers();
     }
 
-    LiveData<User> getActiveUser(String name){
+    public LiveData<User> getActiveUser(String name){
         return mRepository.getActiveUser(name);
     }
 
@@ -35,8 +36,16 @@ public class UserViewModel extends AndroidViewModel {
         mRepository.update(user);
     }
 
-    LiveData<List<String>> getAllUserNames(){
+    public LiveData<List<String>> getAllUserNames(){
         return mRepository.getAllUserNames();
+    }
+
+    public LiveData<Boolean> usersExist(){
+        return mRepository.usersExist();
+    }
+
+    public LiveData<Boolean> nameAlreadyExists(String name){
+        return mRepository.nameAlreadyExists(name);
     }
 
 }

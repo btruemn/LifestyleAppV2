@@ -13,11 +13,14 @@ import android.view.Display;
 
 import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.model.SharedPreferencesHandler;
+import com.msd.lifestyleapp.model.UserViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProviders;
+
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
@@ -33,11 +36,16 @@ public class MainActivity extends AppCompatActivity {
      */
 
     public static boolean isTablet;
+    private UserViewModel userViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
     }
 
     private boolean checkIsTablet() {
@@ -70,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
         if (!locationEnabled()) {
             buildAlertMessageNoGps();
         } else {
-            SharedPreferencesHandler prefs = new SharedPreferencesHandler(this);
-            boolean usersExist = prefs.usersExist();
+            boolean usersExist = userViewModel.usersExist().getValue();
+            System.out.println("USER NAME LIST: " + userViewModel.getAllUserNames().getValue().toString());
 
             isTablet = checkIsTablet();
 
