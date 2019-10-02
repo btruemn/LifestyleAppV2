@@ -23,7 +23,7 @@ public interface UserDao {
     void insert(User user);
 
     @Update
-    LiveData<User> update(User user);
+    void update(User user);
 
     @Delete
     void delete(User user);
