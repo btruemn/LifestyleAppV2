@@ -29,7 +29,7 @@ public class UserRepository {
         for(User user: allUsers.getValue()){
             names.add(user.getName());
         }
-        return null;
+        return (LiveData<List<String>>) names;
     }
 
     LiveData<User> getActiveUser(String name){

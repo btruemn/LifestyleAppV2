@@ -35,4 +35,8 @@ public class UserViewModel extends AndroidViewModel {
         mRepository.update(user);
     }
 
+    LiveData<List<String>> getAllUserNames(){
+        return mRepository.getAllUserNames();
+    }
+
 }
