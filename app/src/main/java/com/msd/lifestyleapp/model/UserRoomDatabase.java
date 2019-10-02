@@ -28,7 +28,7 @@ public abstract class UserRoomDatabase extends RoomDatabase {
 
 }
 
-/* get an instance of the created database using the following code:
+/* get an instance of the created db using the following code:
     AppDatabase db = Room.databaseBuilder(getApplicationContext(),
         AppDatabase.class, "database-name").build();
  */
