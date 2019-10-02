@@ -4,9 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -55,8 +55,7 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'recyclerview-v7'
     }
-
-
+    
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     implementation 'com.android.support:design:28.0.0'
