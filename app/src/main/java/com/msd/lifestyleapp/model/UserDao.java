@@ -13,7 +13,7 @@ import androidx.room.Update;
 @Dao
 public interface UserDao {
 
-    @Query("SELECT * FROM user")
+    @Query("SELECT * FROM User")
     LiveData<List<User>> getAll();
 
     @Query("SELECT * FROM user WHERE name LIKE :name LIMIT 1")

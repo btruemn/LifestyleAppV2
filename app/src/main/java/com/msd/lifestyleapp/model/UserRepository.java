@@ -1,8 +1,10 @@
 package com.msd.lifestyleapp.model;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,8 @@ public class UserRepository {
     }
 
     public LiveData<Boolean> usersExist(){
-        if(allUsers.getValue() == null) return new MutableLiveData<>(false);
+        List<User> users = allUsers.getValue();
+        if(users == null) return new MutableLiveData<>(false);
         else return new MutableLiveData<>(!allUsers.getValue().isEmpty());
     }
 
@@ -51,7 +54,7 @@ public class UserRepository {
 
     public void insert (User user) {
 //        userDao.insert(user);
-        new insertAsyncTask(userDao).execute(user);
+        new insertAsyncTask(userDao, this).execute(user);
     }
 
     public void update(User user) {
@@ -61,9 +64,13 @@ public class UserRepository {
     private static class insertAsyncTask extends AsyncTask<User, Void, Void> {
 
         private UserDao mAsyncTaskDao;
+        private WeakReference<UserRepository> userRepositoryWeakReference;
 
-        insertAsyncTask(UserDao dao) {
+
+        insertAsyncTask(UserDao dao, UserRepository repository) {
             mAsyncTaskDao = dao;
+            userRepositoryWeakReference = new WeakReference<>(repository);
+
         }
 
         @Override
@@ -71,6 +78,15 @@ public class UserRepository {
             System.out.println("IN BACKGROUND: " + params[0].toString());
             mAsyncTaskDao.insert(params[0]);
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            userRepositoryWeakReference.get().allUsers = mAsyncTaskDao.getAll();
+            String daoGetAll = mAsyncTaskDao.getAll().getValue().toString();
+            String users = userRepositoryWeakReference.get().allUsers.getValue().toString();
+            System.out.printf("UPDATED allUSERS: " + users);
         }
     }
 

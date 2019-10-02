@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             buildAlertMessageNoGps();
         } else {
             boolean usersExist = userViewModel.usersExist().getValue();
-            System.out.println("USER NAME LIST: " + userViewModel.getAllUserNames().getValue().toString());
+            System.out.println("USERNAME LIST: " + userViewModel.getAllUserNames().getValue().toString());
 
             isTablet = checkIsTablet();
 

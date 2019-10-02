@@ -16,22 +16,27 @@ import android.widget.TextView;
 
 import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.model.SharedPreferencesHandler;
+import com.msd.lifestyleapp.model.UserViewModel;
 
+import java.util.List;
 import java.util.Set;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class UserSelectionFragment extends Fragment implements View.OnClickListener {
 
-    private SharedPreferencesHandler prefs;
+//    private SharedPreferencesHandler prefs;
     private Button registerUserButton;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private UserViewModel userViewModel;
+
 
     public UserSelectionFragment() {
         // Required empty public constructor
@@ -50,7 +55,11 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
 
 //        setContentView(R.layout.activity_userselection);
 //        getSupportActionBar().setTitle("Lifestyle");
-        prefs = new SharedPreferencesHandler(view.getContext()); /////WILL THIS WORK?
+
+//        prefs = new SharedPreferencesHandler(view.getContext()); /////WILL THIS WORK?
+
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         registerUserButton = view.findViewById(R.id.registerNewUserButton);
         registerUserButton.setOnClickListener(this);
@@ -59,7 +68,8 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
         LinearLayout layout = view.findViewById(R.id.userSelectionLayout);
 
         //all users stored in shared preferences
-        Set<String> names = prefs.getNames();
+//        Set<String> names = prefs.getNames();
+        List<String> names = userViewModel.getAllUserNames().getValue();
         System.out.println("Number of users: " + names.size());
 
         //loop through all users creating buttons for each of them

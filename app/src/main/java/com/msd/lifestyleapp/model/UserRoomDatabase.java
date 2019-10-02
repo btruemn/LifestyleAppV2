@@ -13,6 +13,8 @@ public abstract class UserRoomDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     private static volatile UserRoomDatabase userRoomInstance;
 
+
+    //TODO: get existing db on device if it exists
     //create Singleton instance of DB
     public static UserRoomDatabase getDatabase(final Context context) {
         if (userRoomInstance == null) {

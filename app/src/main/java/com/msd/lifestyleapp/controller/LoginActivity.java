@@ -6,11 +6,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.msd.lifestyleapp.R;
+import com.msd.lifestyleapp.model.UserViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 //TODO: fix app so it doesn't crash after enabling location
 
@@ -18,6 +20,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+//    private UserViewModel userViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,9 @@ public class LoginActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.userSelectionContainer, selectionFragment, "selection_frag");
             fragmentTransaction.commit();
         }
+
+//        // Get a new or existing ViewModel from the ViewModelProvider.
+//        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
     }
 
