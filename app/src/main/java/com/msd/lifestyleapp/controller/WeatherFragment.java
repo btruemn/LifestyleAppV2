@@ -33,7 +33,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class WeatherFragment extends Fragment {
 
-//    public SharedPreferencesHandler prefs;
     public String username, city, state;
     public TextView locationTv, weatherTv, responseTv, conditionsTv, humidityTv, minTempTv, maxTempTv;
     public ImageView weatherIcon;
@@ -55,30 +54,22 @@ public class WeatherFragment extends Fragment {
         // Get a new or existing ViewModel from the ViewModelProvider.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
-        if(!MainActivity.isTablet) {
+        if (!MainActivity.isTablet) {
             Toolbar toolbar = view.findViewById(R.id.app_bar);
             toolbar.setTitle("Weather");
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        }else{
+        } else {
             view.findViewById(R.id.app_bar).setVisibility(View.GONE);
         }
 
         mProgressBar = view.findViewById(R.id.progressBar);
-
         username = getArguments().getString("username");
-
         locationTv = view.findViewById(R.id.city_field);
-
         weatherTv = view.findViewById(R.id.temperature);
-
         weatherIcon = view.findViewById(R.id.weather_icon);
-
         conditionsTv = view.findViewById(R.id.conditions_field);
-
         humidityTv = view.findViewById(R.id.humidity_field);
-
         minTempTv = view.findViewById(R.id.min_temp_field);
-
         maxTempTv = view.findViewById(R.id.max_temp_field);
 
         setWeatherInfo();
@@ -93,7 +84,7 @@ public class WeatherFragment extends Fragment {
             public void onChanged(User user) {
                 city = user.getCity();
                 state = user.getState();
-                locationTv.setText(city + ", " +  state);
+                locationTv.setText(city + ", " + state);
 
                 Retrofit rf = new Retrofit.Builder()
                         .baseUrl("https://api.openweathermap.org/data/")
