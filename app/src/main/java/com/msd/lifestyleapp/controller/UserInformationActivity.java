@@ -80,20 +80,22 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
         userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                dob = user.getDob();
-                username = user.getName();
-                weight = user.getWeight();
-                height = user.getHeight();
-                sex = user.getSex();
-                city = user.getCity();
-                state = user.getState();
+                if(user != null){ //added null check since onChanged is called when user is deleted
+                    dob = user.getDob();
+                    username = user.getName();
+                    weight = user.getWeight();
+                    height = user.getHeight();
+                    sex = user.getSex();
+                    city = user.getCity();
+                    state = user.getState();
 
-                healthUtility = new HealthUtility(weight, height, sex, dob);
+                    healthUtility = new HealthUtility(weight, height, sex, dob);
 
-                bmi = healthUtility.getBmi();
-                bmr = healthUtility.getBmr();
-                age = healthUtility.getAge();
-                setUserInfoTextViews();
+                    bmi = healthUtility.getBmi();
+                    bmr = healthUtility.getBmr();
+                    age = healthUtility.getAge();
+                    setUserInfoTextViews();
+                }
             }
         });
 
