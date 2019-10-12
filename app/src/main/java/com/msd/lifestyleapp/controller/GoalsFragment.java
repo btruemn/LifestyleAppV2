@@ -46,7 +46,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
     private Menu _menu;
     private HealthUtility healthUtility;
     private double bmr;
-    private TextView goalDisplay, calorieMessageDisplay;
+    private TextView goalDisplay, calorieMessageDisplay, currentWeight;
     private Button getCaloriesButton;
     private UserViewModel userViewModel;
     private User currentUser;
@@ -103,6 +103,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
         goalDisplay = view.findViewById(R.id.calorie_display);
         calorieMessageDisplay = view.findViewById(R.id.calorie_message);
         getCaloriesButton = view.findViewById(R.id.get_calories);
+        currentWeight = view.findViewById(R.id.current_weight);
         getCaloriesButton.setOnClickListener(this);
 
         return view;
@@ -111,7 +112,6 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
     public void setViews(View view) {
         setSpinners(view);
 
-        TextView currentWeight = view.findViewById(R.id.current_weight);
         currentWeight.setText(String.format("%s lbs", Integer.toString(weight)));
 
         TextView heightView = view.findViewById(R.id.current_height);
@@ -195,7 +195,9 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
                 poundsPerWeek = user.getPoundsPerWeek();
 
                 healthUtility = new HealthUtility(weight, height, sex, dob);
-                setViews(_view);
+
+                setSpinners(_view);
+
                 if (_menu != null) {
                     getActivity().onCreateOptionsMenu(_menu);
                 }
@@ -210,21 +212,21 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void setUserInfo() {
-        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                username = user.getName();
-                height = user.getHeight();
-                dob = user.getDob();
-                sex = user.getSex();
-                weight = user.getWeight();
-                weightGoal = user.getFitnessGoal();
-                activityLevel = user.getActivityLevel();
-                poundsPerWeek = user.getPoundsPerWeek();
-            }
-        });
-    }
+//    private void setUserInfo() {
+//        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+//            @Override
+//            public void onChanged(User user) {
+//                username = user.getName();
+//                height = user.getHeight();
+//                dob = user.getDob();
+//                sex = user.getSex();
+//                weight = user.getWeight();
+//                weightGoal = user.getFitnessGoal();
+//                activityLevel = user.getActivityLevel();
+//                poundsPerWeek = user.getPoundsPerWeek();
+//            }
+//        });
+//    }
 
     private double roundDecimal(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
