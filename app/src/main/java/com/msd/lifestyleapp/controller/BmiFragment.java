@@ -13,10 +13,13 @@ import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.bmr.HealthUtility;
 import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
+import com.msd.lifestyleapp.model.UserViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,10 +29,10 @@ public class BmiFragment extends Fragment {
     private TextView bmiTv, bmrTv, weightTv;
     private String username, dob, height, sex;
     private int weight;
-    private SharedPreferencesHandler prefs;
     private double bmi, bmr;
     private Menu _menu;
     private HealthUtility healthUtility;
+    private UserViewModel userViewModel;
 
     public BmiFragment() {
         // Required empty public constructor
@@ -41,7 +44,8 @@ public class BmiFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_bmi, container, false);
 
-        prefs = new SharedPreferencesHandler(getActivity());
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         //setting the toolbar
         if(!MainActivity.isTablet) {
@@ -58,37 +62,54 @@ public class BmiFragment extends Fragment {
 
         username = getArguments().getString("username");
 
-        setUserInfo();
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                dob = user.getDob();
+                username = user.getName();
+                weight = user.getWeight();
+                height = user.getHeight();
+                sex = user.getSex();
 
-        healthUtility = new HealthUtility(weight, height, sex, dob);
-        bmi = healthUtility.getBmi();
-        bmr = healthUtility.getBmr();
+                healthUtility = new HealthUtility(weight, height, sex, dob);
+                bmi = healthUtility.getBmi();
+                bmr = healthUtility.getBmr();
 
-        bmiTv.setText(Double.toString(bmi));
-        bmrTv.setText(Double.toString(bmr));
-        weightTv.setText(Integer.toString(weight));
+                bmiTv.setText(Double.toString(bmi));
+                bmrTv.setText(Double.toString(bmr));
+                weightTv.setText(Integer.toString(weight));
+            }
 
+        });
 
         return view;
     }
 
     @Override
     public void onResume() {
-        setUserInfo();
-
-        healthUtility = new HealthUtility(weight, height, sex, dob);
-        bmi = healthUtility.getBmi();
-        bmr = healthUtility.getBmr();
-
-        bmiTv.setText(Double.toString(bmi));
-        bmrTv.setText(Double.toString(bmr));
-        weightTv.setText(Integer.toString(weight));
-
-        if (_menu != null) {
-            getActivity().onCreateOptionsMenu(_menu);
-        }
-
         super.onResume();
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                dob = user.getDob();
+                username = user.getName();
+                weight = user.getWeight();
+                height = user.getHeight();
+                sex = user.getSex();
+
+                healthUtility = new HealthUtility(weight, height, sex, dob);
+                bmi = healthUtility.getBmi();
+                bmr = healthUtility.getBmr();
+
+                bmiTv.setText(Double.toString(bmi));
+                bmrTv.setText(Double.toString(bmr));
+                weightTv.setText(Integer.toString(weight));
+
+                if (_menu != null) {
+                    getActivity().onCreateOptionsMenu(_menu);
+                }
+            }
+        });
     }
 
     @Override
@@ -98,11 +119,16 @@ public class BmiFragment extends Fragment {
     }
 
     private void setUserInfo() {
-        User user = prefs.getUserByName(username);
-        dob = user.getDob();
-        username = user.getName();
-        weight = user.getWeight();
-        height = user.getHeight();
-        sex = user.getSex();
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                dob = user.getDob();
+                username = user.getName();
+                weight = user.getWeight();
+                height = user.getHeight();
+                sex = user.getSex();
+            }
+        });
+
     }
 }

@@ -21,13 +21,17 @@ import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.bmr.HealthUtility;
 import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
+import com.msd.lifestyleapp.model.UserViewModel;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.SQLOutput;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +40,6 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
 
     private Spinner activityLevelSpinner, weightGoalSpinner, poundsSpinner;
     private String[] activityLevelArray, weightGoalArray, poundsArray;
-    private SharedPreferencesHandler prefs;
     private int weight;
     private String weightGoal, activityLevel, poundsPerWeek, height, dob, username, sex;
     private View _view;
@@ -45,6 +48,9 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
     private double bmr;
     private TextView goalDisplay, calorieMessageDisplay;
     private Button getCaloriesButton;
+    private UserViewModel userViewModel;
+    private User currentUser;
+
 
     public GoalsFragment() {
         activityLevelArray = new String[]{"Sedentary", "Lightly-Active", "Active", "Very Active", "Extra-Active"};
@@ -69,11 +75,30 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
         }
 
         username = getArguments().getString("username");
-        prefs = new SharedPreferencesHandler(getActivity());
-        setUserInfo();
-        healthUtility = new HealthUtility(weight, height, sex, dob);
-        setViews(view);
-        _view = view;
+
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                currentUser = user;
+                username = user.getName();
+                height = user.getHeight();
+                dob = user.getDob();
+                sex = user.getSex();
+                weight = user.getWeight();
+                weightGoal = user.getFitnessGoal();
+                activityLevel = user.getActivityLevel();
+                poundsPerWeek = user.getPoundsPerWeek();
+
+                healthUtility = new HealthUtility(weight, height, sex, dob);
+
+                setViews(view);
+                _view = view;
+            }
+        });
 
         goalDisplay = view.findViewById(R.id.calorie_display);
         calorieMessageDisplay = view.findViewById(R.id.calorie_message);
@@ -156,32 +181,49 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onResume() {
-
-        setUserInfo();
-        healthUtility = new HealthUtility(weight, height, sex, dob);
-        setViews(_view);
-        if (_menu != null) {
-            getActivity().onCreateOptionsMenu(_menu);
-        }
-
-        if (goalDisplay.getVisibility() != View.INVISIBLE) {
-            getCaloriesButton.performClick();
-        }
-
         super.onResume();
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                username = user.getName();
+                height = user.getHeight();
+                dob = user.getDob();
+                sex = user.getSex();
+                weight = user.getWeight();
+                weightGoal = user.getFitnessGoal();
+                activityLevel = user.getActivityLevel();
+                poundsPerWeek = user.getPoundsPerWeek();
+
+                healthUtility = new HealthUtility(weight, height, sex, dob);
+                setViews(_view);
+                if (_menu != null) {
+                    getActivity().onCreateOptionsMenu(_menu);
+                }
+
+                if (goalDisplay.getVisibility() != View.INVISIBLE) {
+                    getCaloriesButton.performClick();
+                }
+            }
+        });
+
+
     }
 
 
     private void setUserInfo() {
-        User user = prefs.getUserByName(username);
-        username = user.getName();
-        height = user.getHeight();
-        dob = user.getDob();
-        sex = user.getSex();
-        weight = user.getWeight();
-        weightGoal = user.getFitnessGoal();
-        activityLevel = user.getActivityLevel();
-        poundsPerWeek = user.getPoundsPerWeek();
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                username = user.getName();
+                height = user.getHeight();
+                dob = user.getDob();
+                sex = user.getSex();
+                weight = user.getWeight();
+                weightGoal = user.getFitnessGoal();
+                activityLevel = user.getActivityLevel();
+                poundsPerWeek = user.getPoundsPerWeek();
+            }
+        });
     }
 
     private double roundDecimal(double value, int places) {
@@ -273,11 +315,15 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
                 }
             }
 
-            User currentUser = prefs.getUserByName(username);
-            prefs.updateUserFitnessGoals(currentUser, weightGoalSpinner.getSelectedItem().toString(),
-                    activityLevelSpinner.getSelectedItem().toString(), poundsSpinner.getSelectedItem().toString());
+
+            currentUser.setFitnessGoal(weightGoalSpinner.getSelectedItem().toString());
+            currentUser.setActivityLevel(activityLevelSpinner.getSelectedItem().toString());
+            System.out.println("LBS/WEEK: " + poundsSpinner.getSelectedItem().toString());
+            currentUser.setPoundsPerWeek(poundsSpinner.getSelectedItem().toString());
+            userViewModel.update(currentUser);
 
             setCalorieViews(caloriesRequired);
+
         }
     }
 
