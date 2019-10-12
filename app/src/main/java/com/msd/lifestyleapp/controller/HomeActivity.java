@@ -28,6 +28,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.msd.lifestyleapp.R;
+import com.msd.lifestyleapp.model.User;
+import com.msd.lifestyleapp.model.UserViewModel;
 
 import java.io.File;
 
@@ -37,6 +39,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class HomeActivity extends AppCompatActivity {
@@ -44,9 +48,11 @@ public class HomeActivity extends AppCompatActivity {
     private static Menu _menu;
     private String username;
     private String path, subPath;
-//    private SharedPreferencesHandler prefs;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private User currentUser;
+    private UserViewModel userViewModel;
+
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -82,6 +88,15 @@ public class HomeActivity extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter("UPDATE"));
 
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                currentUser = user;
+            }
+        });
     }
 
     public void getBmiModule(View view) {
@@ -140,7 +155,7 @@ public class HomeActivity extends AppCompatActivity {
         ConstraintLayout layout = findViewById(R.id.icon_container);
         layout.setVisibility(View.GONE);
 
-        //starting transaction
+        //starting transactions
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
 

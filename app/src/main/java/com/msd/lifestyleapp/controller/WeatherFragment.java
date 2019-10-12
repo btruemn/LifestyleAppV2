@@ -13,20 +13,21 @@ import android.widget.TextView;
 
 import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.model.User;
+import com.msd.lifestyleapp.model.UserRepository;
 import com.msd.lifestyleapp.model.UserViewModel;
-import com.msd.lifestyleapp.weather.JSONWeatherAPI;
 import com.msd.lifestyleapp.weather.Weather;
+import com.msd.lifestyleapp.weather.WeatherViewModel;
+
+import java.lang.ref.WeakReference;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProviders;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,9 +37,10 @@ public class WeatherFragment extends Fragment {
     public String username, city, state;
     public TextView locationTv, weatherTv, responseTv, conditionsTv, humidityTv, minTempTv, maxTempTv;
     public ImageView weatherIcon;
-    public String apiKey = "008e52012c1bf318c1d1b7f66e5e363d";
     public ProgressBar mProgressBar;
     private UserViewModel userViewModel;
+    private WeatherViewModel weatherViewModel;
+    private User currentUser;
 
 
     public WeatherFragment() {
@@ -53,6 +55,7 @@ public class WeatherFragment extends Fragment {
 
         // Get a new or existing ViewModel from the ViewModelProvider.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel.class);
 
         if (!MainActivity.isTablet) {
             Toolbar toolbar = view.findViewById(R.id.app_bar);
@@ -72,71 +75,54 @@ public class WeatherFragment extends Fragment {
         minTempTv = view.findViewById(R.id.min_temp_field);
         maxTempTv = view.findViewById(R.id.max_temp_field);
 
-        setWeatherInfo();
+
+       
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+
+            @Override
+            public void onChanged(User user) {
+                currentUser = user;
+
+                setWeatherInfo();
+            }
+        });
 
         return view;
     }
 
     public void setWeatherInfo() {
-
-        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+        weatherViewModel.getWeather(currentUser.getCity(), currentUser.getState(), currentUser.getPostalCode()).observe(getViewLifecycleOwner(), new Observer<Weather>() {
             @Override
-            public void onChanged(User user) {
-                city = user.getCity();
-                state = user.getState();
-                locationTv.setText(city + ", " + state);
+            public void onChanged(Weather weather) {
+                if (weather != null) {
+                    locationTv.setText(city + ", " + state);
 
-                Retrofit rf = new Retrofit.Builder()
-                        .baseUrl("https://api.openweathermap.org/data/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
+                    mProgressBar.setVisibility(View.GONE);
 
-                JSONWeatherAPI jsonWAPI = rf.create(JSONWeatherAPI.class);
+                    chooseWeatherIcon(weather.wi.get(0).getIcon(), weatherIcon);
 
-                Call<Weather> call = jsonWAPI.getWeather(user.getPostalCode(), "US", "Imperial", apiKey);
+                    //Round the temperature to one decimal place
+                    double actualTemp = Math.round(weather.temperature.getTemp() * 10) / 10.0;
+                    double actualMin = Math.round(weather.temperature.getTempMin() * 10) / 10.0;
+                    double actualMax = Math.round(weather.temperature.getTempMax() * 10) / 10.0;
 
-                call.enqueue(new Callback<Weather>() {
-                    @Override
-                    public void onResponse(Call<Weather> call, Response<Weather> response) {
-                        if (!response.isSuccessful()) {
-                            responseTv.setText("Code: " + response.code());
-                            return;
-                        }
+                    weatherTv.setText(actualTemp + "°");
 
-                        mProgressBar.setVisibility(View.GONE);
+                    conditionsTv.setText(weather.wi.get(0).getDescription());
 
-                        Weather w = response.body();
+                    humidityTv.setText("Humidity: " + weather.temperature.getHumidity() + "%");
 
-                        chooseWeatherIcon(w.wi.get(0).getIcon(), weatherIcon);
+                    minTempTv.setText("Low: " + weather.temperature.getTempMin() + "°");
 
-                        //Round the temperature to one decimal place
-                        double actualTemp = Math.round(w.temperature.getTemp() * 10) / 10.0;
-                        double actualMin = Math.round(w.temperature.getTempMin() * 10) / 10.0;
-                        double actualMax = Math.round(w.temperature.getTempMax() * 10) / 10.0;
-
-                        weatherTv.setText(actualTemp + "°");
-
-                        conditionsTv.setText(w.wi.get(0).getDescription());
-
-                        humidityTv.setText("Humidity: " + w.temperature.getHumidity() + "%");
-
-                        minTempTv.setText("Low: " + w.temperature.getTempMin() + "°");
-
-                        maxTempTv.setText("High: " + w.temperature.getTempMax() + "°");
-                    }
-
-                    @Override
-                    public void onFailure(Call<Weather> call, Throwable t) {
-                        responseTv.setText(t.getMessage());
-                        mProgressBar.setVisibility(View.GONE);
-                    }
-                });
+                    maxTempTv.setText("High: " + weather.temperature.getTempMax() + "°");
+                }
             }
         });
 
+    }
+
 //        mProgressBar = new ProgressBar(this.getContext());
 //        mProgressBar.setVisibility(View.VISIBLE);
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
