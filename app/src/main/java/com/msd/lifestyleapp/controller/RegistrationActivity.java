@@ -152,21 +152,28 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
                 sex = sexSpinner.getSelectedItem().toString();
 
                 if (!checkFieldsFilledOut()) return;
-                if (nameAlreadyExists()) return;
                 if (!passwordsMatch()) return;
 
-//                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//                String encoded = encoder.encode(password);
+                userViewModel.getAllUserNames().observe(this, new Observer<List<String>>() {
+                    @Override
+                    public void onChanged(List<String> strings) {
+                        if (strings.contains(name)) {
+                            Toast.makeText(RegistrationActivity.this, "Name is already taken.", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else {
+                            //storing all of the user's values in db
+                            User user = new User(name, dob, height, Integer.parseInt(weight), sex, password);
+                            userViewModel.insert(user);
+                            System.out.println("User " + name + " added!");
 
-                //storing all of the user's values in shared preferences
-                User user = new User(name, dob, height, Integer.parseInt(weight), sex, password);
-                userViewModel.insert(user);
-//                prefs.addUser(user);
-                System.out.println("User " + name + " added!");
+                            //here we will start the new intent to the user selection page
+                            Intent userSelectionIntent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                            startActivity(userSelectionIntent);
+                        }
+                    }
+                });
 
-                //here we will start the new intent to the user selection page
-                Intent userSelectionIntent = new Intent(this, LoginActivity.class);
-                this.startActivity(userSelectionIntent);
+
                 break;
             }
             case R.id.enterAge: {
@@ -249,14 +256,6 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
             return false;
         }
         return true;
-    }
-
-    public boolean nameAlreadyExists() {
-        if (userViewModel.nameAlreadyExists(name).getValue()) {
-            Toast.makeText(this, "Name is already taken.", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
     }
 
     public boolean passwordsMatch() {

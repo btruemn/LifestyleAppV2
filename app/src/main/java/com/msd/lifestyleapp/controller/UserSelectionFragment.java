@@ -114,7 +114,7 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
         String username = "";
         int registerButtonId = (registerUserButton.getId()) + 1;
 
-        for (int i = registerButtonId; i < registerButtonId + 5; i++) {
+        for (int i = registerButtonId; i <= registerButtonId + 100; i++) {
             int id = view.getId();
             if (id == i) {
                 Button btn = view.findViewById(i);
@@ -148,6 +148,7 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
         fragmentTransaction = fragmentManager.beginTransaction();
         AuthenticationFragment authenticationFragment = new AuthenticationFragment();
         Bundle bundle = new Bundle();
+        System.out.println("PhoneUserSelection for user " + username);
         bundle.putString("username", username);
         authenticationFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.userSelectionContainer, authenticationFragment, "login_frag");

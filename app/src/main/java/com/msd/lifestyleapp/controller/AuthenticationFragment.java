@@ -21,14 +21,18 @@ import android.widget.Toast;
 import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
+import com.msd.lifestyleapp.model.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,11 +40,12 @@ import androidx.fragment.app.Fragment;
 public class AuthenticationFragment extends Fragment implements View.OnClickListener, LocationListener {
 
     private boolean isTablet = MainActivity.isTablet;
-    private SharedPreferencesHandler prefs;
+    //    private SharedPreferencesHandler prefs;
     private TextView passwordTextView;
     private User currentUser;
     private String username;
     private TextView nameDisplay;
+    private UserViewModel userViewModel;
 
     //location
     private LocationManager locationManager;
@@ -105,11 +110,21 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
             Bundle bundle = this.getArguments();
             username = bundle.getString("username", "failure");
             System.out.println("USERNAME: " + username);
-            prefs = new SharedPreferencesHandler(view.getContext());
-            currentUser = prefs.getUserByName(username);
 
-            nameDisplay = view.findViewById(R.id.nameDisplay);
-            nameDisplay.setText("Enter password for: " + currentUser.getName());
+            // Get a new or existing ViewModel from the ViewModelProvider.
+            userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+            userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+                    currentUser = user;
+
+                    nameDisplay = view.findViewById(R.id.nameDisplay);
+                    nameDisplay.setText("Enter password for: " + currentUser.getName());
+                }
+            });
+
+
         }
 
         // Inflate the layout for this fragment
@@ -124,13 +139,21 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
                 if (isTablet) {
                     nameDisplay = getActivity().findViewById(R.id.nameDisplay);
                     username = nameDisplay.getText().toString().split(":")[1].trim();
-                    prefs = new SharedPreferencesHandler(view.getContext());
+
+                    // Get a new or existing ViewModel from the ViewModelProvider.
+                    userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
                     System.out.println(username);
-                    currentUser = prefs.getUserByName(username);
+
+                    userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+                        @Override
+                        public void onChanged(User user) {
+                            currentUser = user;
+                        }
+
+                    });
+
                 }
-//                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
                 passwordTextView = getActivity().findViewById(R.id.passwordInput);
-                //                String password = encoder.encode(passwordTextView.getText().toString());
                 String password = passwordTextView.getText().toString();
 
                 if (!password.equals(currentUser.getPassword())) {
@@ -148,7 +171,10 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
                         //postal
                         String postalCode = cityAndState[2];
 
-                        prefs.updateLocation(city, state, postalCode, currentUser);
+                        currentUser.setCity(city);
+                        currentUser.setState(state);
+                        currentUser.setPostalCode(postalCode);
+                        userViewModel.update(currentUser);
 
                         //correct password...go to home page
                         Intent homePageIntent = new Intent(this.getActivity(), HomeActivity.class);

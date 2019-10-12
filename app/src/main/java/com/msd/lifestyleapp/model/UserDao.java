@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -25,11 +26,15 @@ public interface UserDao {
     @Insert
     void insert(User user);
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(User user);
 
     @Delete
     void delete(User user);
+
+    @Query("DELETE from User where name = :userName")
+    void deleteByUserName(String userName);
+
 
 //    @Query("SELECT * FROM user WHERE name IN (:userIds)")
 //    List<User> loadAllByIds(int[] userIds);

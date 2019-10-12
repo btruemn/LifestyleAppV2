@@ -23,6 +23,7 @@ import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.bmr.HealthUtility;
 import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
+import com.msd.lifestyleapp.model.UserViewModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class UserInformationActivity extends AppCompatActivity implements TextView.OnClickListener {
@@ -41,9 +44,10 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
     private int weight;
     private String height, sex, dob, age, city, state;
     private double bmi, bmr;
-    private SharedPreferencesHandler prefs;
     private String subPath;
     private HealthUtility healthUtility;
+    private UserViewModel userViewModel;
+    private User currentUser;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -56,11 +60,11 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(MainActivity.isTablet){
+        if (MainActivity.isTablet) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             setContentView(R.layout.activity_user_information_tablet);
 
-        }else{
+        } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             setContentView(R.layout.activity_user_information);
         }
@@ -70,15 +74,28 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
         setSupportActionBar(toolbar);
 
         username = getIntent().getStringExtra("username");
-        prefs = new SharedPreferencesHandler(this);
-        setUserInfo();
 
-        healthUtility = new HealthUtility(weight, height, sex, dob);
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                dob = user.getDob();
+                username = user.getName();
+                weight = user.getWeight();
+                height = user.getHeight();
+                sex = user.getSex();
+                city = user.getCity();
+                state = user.getState();
 
-        bmi = healthUtility.getBmi();
-        bmr = healthUtility.getBmr();
-        age = healthUtility.getAge();
-        setUserInfoTextViews();
+                healthUtility = new HealthUtility(weight, height, sex, dob);
+
+                bmi = healthUtility.getBmi();
+                bmr = healthUtility.getBmr();
+                age = healthUtility.getAge();
+                setUserInfoTextViews();
+            }
+        });
 
         findViewById(R.id.edit_button).setOnClickListener(this);
         findViewById(R.id.save_button).setOnClickListener(this);
@@ -88,6 +105,13 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
         subPath = username.replace(" ", "_");
         subPath += ".png";
         setUserPhoto();
+
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                currentUser = user;
+            }
+        });
     }
 
     public void setUserPhoto() {
@@ -198,16 +222,20 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
         bmrTv.setText(Double.toString(bmr));
     }
 
-    private void setUserInfo() {
-        User user = prefs.getUserByName(username);
-        dob = user.getDob();
-        username = user.getName();
-        weight = user.getWeight();
-        height = user.getHeight();
-        sex = user.getSex();
-        city = user.getCity();
-        state = user.getState();
-    }
+//    private void setUserInfo() {
+//        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+//            @Override
+//            public void onChanged(User user) {
+//                dob = user.getDob();
+//                username = user.getName();
+//                weight = user.getWeight();
+//                height = user.getHeight();
+//                sex = user.getSex();
+//                city = user.getCity();
+//                state = user.getState();
+//            }
+//        });
+//    }
 
     public double roundDecimal(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
@@ -266,13 +294,29 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
 
                 int newWeight = Integer.parseInt(wd.getSelectedItem().toString());
                 String newHeight = hd.getSelectedItem().toString();
-                prefs.updateUser(username, newWeight, newHeight);
-                setUserInfo();
+                currentUser.setWeight(newWeight);
+                currentUser.setHeight(newHeight);
+                userViewModel.update(currentUser);
 
-                healthUtility = new HealthUtility(weight, height, sex, dob);
-                bmi = healthUtility.getBmi();
-                bmr = healthUtility.getBmr();
-                setUserInfoTextViews();
+                userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+                    @Override
+                    public void onChanged(User user) {
+                        dob = user.getDob();
+                        username = user.getName();
+                        weight = user.getWeight();
+                        height = user.getHeight();
+                        sex = user.getSex();
+                        city = user.getCity();
+                        state = user.getState();
+
+                        healthUtility = new HealthUtility(weight, height, sex, dob);
+                        bmi = healthUtility.getBmi();
+                        bmr = healthUtility.getBmr();
+                        setUserInfoTextViews();
+                    }
+                });
+
+
                 break;
             }
             case R.id.delete_profile_button: {
@@ -315,7 +359,7 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
                 .setCancelable(false)
                 .setPositiveButton("Yes", (dialog, id) -> {
                     deleteUserPhoto();
-                    prefs.deleteUser(username);
+                    userViewModel.deleteByUserName(username);
                     Intent userSelectionPageIntent = new Intent(this, LoginActivity.class);
                     userSelectionPageIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     this.startActivity(userSelectionPageIntent);
