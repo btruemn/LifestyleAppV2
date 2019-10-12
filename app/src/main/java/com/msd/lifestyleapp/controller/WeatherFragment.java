@@ -15,12 +15,15 @@ import android.widget.TextView;
 import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
+import com.msd.lifestyleapp.model.UserViewModel;
 import com.msd.lifestyleapp.weather.JSONWeatherAPI;
 import com.msd.lifestyleapp.weather.Weather;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,6 +41,8 @@ public class WeatherFragment extends Fragment {
     public ImageView weatherIcon;
     public String apiKey = "008e52012c1bf318c1d1b7f66e5e363d";
     public ProgressBar mProgressBar;
+    private UserViewModel userViewModel;
+
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -49,7 +54,8 @@ public class WeatherFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
 
-        prefs = new SharedPreferencesHandler(getActivity());
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         if(!MainActivity.isTablet) {
             Toolbar toolbar = view.findViewById(R.id.app_bar);
@@ -84,62 +90,63 @@ public class WeatherFragment extends Fragment {
 
     public void setWeatherInfo() {
 
-        User user = prefs.getUserByName(username);
-        city = user.getCity();
-        state = user.getState();
-        locationTv.setText(city + ", " +  state);
-
-        Retrofit rf = new Retrofit.Builder()
-                .baseUrl("https://api.openweathermap.org/data/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        JSONWeatherAPI jsonWAPI = rf.create(JSONWeatherAPI.class);
-
-        Call<Weather> call = jsonWAPI.getWeather(user.getPostalCode(), "US", "Imperial", apiKey);
-
-//        mProgressBar = new ProgressBar(this.getContext());
-//        mProgressBar.setVisibility(View.VISIBLE);
-
-        call.enqueue(new Callback<Weather>() {
+        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
             @Override
-            public void onResponse(Call<Weather> call, Response<Weather> response) {
-                if (!response.isSuccessful()) {
-                    responseTv.setText("Code: " + response.code());
-                    return;
-                }
+            public void onChanged(User user) {
+                city = user.getCity();
+                state = user.getState();
+                locationTv.setText(city + ", " +  state);
 
-                mProgressBar.setVisibility(View.GONE);
+                Retrofit rf = new Retrofit.Builder()
+                        .baseUrl("https://api.openweathermap.org/data/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
 
-                Weather w = response.body();
+                JSONWeatherAPI jsonWAPI = rf.create(JSONWeatherAPI.class);
 
-                chooseWeatherIcon(w.wi.get(0).getIcon(), weatherIcon);
+                Call<Weather> call = jsonWAPI.getWeather(user.getPostalCode(), "US", "Imperial", apiKey);
 
-                //Round the temperature to one decimal place
-                double actualTemp = Math.round(w.temperature.getTemp() * 10) / 10.0;
-                double actualMin = Math.round(w.temperature.getTempMin() * 10) / 10.0;
-                double actualMax = Math.round(w.temperature.getTempMax() * 10) / 10.0;
+                call.enqueue(new Callback<Weather>() {
+                    @Override
+                    public void onResponse(Call<Weather> call, Response<Weather> response) {
+                        if (!response.isSuccessful()) {
+                            responseTv.setText("Code: " + response.code());
+                            return;
+                        }
 
-                weatherTv.setText(actualTemp + "°");
+                        mProgressBar.setVisibility(View.GONE);
 
-                conditionsTv.setText(w.wi.get(0).getDescription());
+                        Weather w = response.body();
 
-                humidityTv.setText("Humidity: " + w.temperature.getHumidity() + "%");
+                        chooseWeatherIcon(w.wi.get(0).getIcon(), weatherIcon);
 
-                minTempTv.setText("Low: " + w.temperature.getTempMin() + "°");
+                        //Round the temperature to one decimal place
+                        double actualTemp = Math.round(w.temperature.getTemp() * 10) / 10.0;
+                        double actualMin = Math.round(w.temperature.getTempMin() * 10) / 10.0;
+                        double actualMax = Math.round(w.temperature.getTempMax() * 10) / 10.0;
 
-                maxTempTv.setText("High: " + w.temperature.getTempMax() + "°");
+                        weatherTv.setText(actualTemp + "°");
 
+                        conditionsTv.setText(w.wi.get(0).getDescription());
 
-            }
+                        humidityTv.setText("Humidity: " + w.temperature.getHumidity() + "%");
 
-            @Override
-            public void onFailure(Call<Weather> call, Throwable t) {
-                responseTv.setText(t.getMessage());
-                mProgressBar.setVisibility(View.GONE);
+                        minTempTv.setText("Low: " + w.temperature.getTempMin() + "°");
+
+                        maxTempTv.setText("High: " + w.temperature.getTempMax() + "°");
+                    }
+
+                    @Override
+                    public void onFailure(Call<Weather> call, Throwable t) {
+                        responseTv.setText(t.getMessage());
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+                });
             }
         });
 
+//        mProgressBar = new ProgressBar(this.getContext());
+//        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
