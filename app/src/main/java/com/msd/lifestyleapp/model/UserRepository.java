@@ -10,12 +10,14 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 public class UserRepository {
 
     private UserDao userDao;
     private LiveData<List<String>> userNames;
     private LiveData<User> activeUser;
+//    private LiveData<Boolean> usersExist;
 
     UserRepository(Application application){
         UserRoomDatabase db = UserRoomDatabase.getDatabase(application);
@@ -32,11 +34,11 @@ public class UserRepository {
         return new MutableLiveData<>(userNames.getValue().contains(name));
     }
 
-    public LiveData<Boolean> usersExist(){
-        List<String> users = userNames.getValue();
-        if(users == null) return new MutableLiveData<>(false);
-        else return new MutableLiveData<>(!userNames.getValue().isEmpty());
-    }
+//    public LiveData<Boolean> usersExist(){
+//        List<String> users = userNames.getValue();
+//        if(users == null) return new MutableLiveData<>(false);
+//        else return new MutableLiveData<>(!userNames.getValue().isEmpty());
+//    }
 
     LiveData<User> getActiveUser(String name){
         activeUser = userDao.findByName(name);

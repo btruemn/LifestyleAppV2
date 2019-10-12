@@ -1,7 +1,6 @@
 package com.msd.lifestyleapp.controller;
 
 
-
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -21,9 +20,11 @@ import com.msd.lifestyleapp.model.UserViewModel;
 import java.util.List;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 /**
@@ -31,7 +32,7 @@ import androidx.lifecycle.ViewModelProviders;
  */
 public class UserSelectionFragment extends Fragment implements View.OnClickListener {
 
-//    private SharedPreferencesHandler prefs;
+    //    private SharedPreferencesHandler prefs;
     private Button registerUserButton;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
@@ -42,7 +43,7 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
         // Required empty public constructor
     }
 
-    public interface onUserSelected{
+    public interface onUserSelected {
 
     }
 
@@ -69,22 +70,24 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
 
         //all users stored in shared preferences
 //        Set<String> names = prefs.getNames();
-        List<String> names = userViewModel.getAllUserNames().getValue();
-        System.out.println("Number of users: " + names.size());
-
-        //loop through all users creating buttons for each of them
-        int startId = (registerUserButton.getId()) + 1;
-        for(String name : names){
-            createButton(name, layout, startId, view);
-            startId++;
-        }
+        userViewModel.getAllUserNames().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(@Nullable final List<String> names) {
+                //loop through all users creating buttons for each of them
+                int startId = (registerUserButton.getId()) + 1;
+                for (String name : names) {
+                    createButton(name, layout, startId, view);
+                    startId++;
+                }
+            }
+        });
 
         return view;
         // Inflate the layout for this fragment
 //        return inflater.inflate(R.layout.fragment_user_selection, container, false);
     }
 
-    public void createButton(String name, LinearLayout layout, int id, View view){
+    public void createButton(String name, LinearLayout layout, int id, View view) {
         Button button = new Button(view.getContext());
         button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         button.getBackground().setColorFilter(getResources().getColor(R.color.colorButtonBlue), PorterDuff.Mode.MULTIPLY);
@@ -93,7 +96,7 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
         button.setHeight(60);
         button.setWidth(600);
         button.setId(id);
-        button.setPadding(20,0,20,40);
+        button.setPadding(20, 0, 20, 40);
         layout.addView(button);
         button.setOnClickListener(this);
     }
@@ -102,7 +105,7 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
     public void onClick(View view) {
 
         //the user chose to register a new account...direct them to the registration page
-        if(view.getId() == R.id.registerNewUserButton){
+        if (view.getId() == R.id.registerNewUserButton) {
             Intent registrationPageIntent = new Intent(view.getContext(), RegistrationActivity.class);
             this.startActivity(registrationPageIntent);
             return;
@@ -111,23 +114,23 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
         String username = "";
         int registerButtonId = (registerUserButton.getId()) + 1;
 
-        for(int i=registerButtonId; i<registerButtonId+5; i++){
+        for (int i = registerButtonId; i < registerButtonId + 5; i++) {
             int id = view.getId();
-            if(id == i){
+            if (id == i) {
                 Button btn = view.findViewById(i);
                 username = btn.getText().toString();
                 break;
             }
         }
 
-        if(MainActivity.isTablet){
+        if (MainActivity.isTablet) {
             tabletUserSelection(username);
-        }else{
+        } else {
             phoneUserSelection(username);
         }
     }
 
-    public void tabletUserSelection(String username){
+    public void tabletUserSelection(String username) {
 //        TextView nameDisplay = view.findViewById(R.id.nameDisplay);
 
         AuthenticationFragment authenticationFragment = (AuthenticationFragment) getFragmentManager().findFragmentByTag("login_frag");
@@ -139,7 +142,7 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
         nameDisplay.setText("Enter password for: " + username);
     }
 
-    public void phoneUserSelection(String username){
+    public void phoneUserSelection(String username) {
         //starting transaction
         fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();

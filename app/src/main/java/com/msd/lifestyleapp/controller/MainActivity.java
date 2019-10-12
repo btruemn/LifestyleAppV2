@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean isTablet;
     private UserViewModel userViewModel;
+    private boolean usersExist;
 
 
     @Override
@@ -85,26 +86,28 @@ public class MainActivity extends AppCompatActivity {
             userViewModel.getAllUserNames().observe(this, new Observer<List<String>>(){
                 @Override
                 public void onChanged(@Nullable final List<String> names) {
+                    // Update the cached copy of the words in the adapter.
                     System.out.println("NAMES: " + names.toString());
+                    usersExist = names.size() > 0;
+
+                    isTablet = checkIsTablet();
+
+                    if (isTablet) {
+                        System.out.println("This device is a tablet.");
+                    } else {
+                        System.out.println("This device is a phone.");
+                    }
+
+                    if (!usersExist) {
+                        Intent userNotRegisteredIntent = new Intent(MainActivity.this, RegistrationActivity.class);
+                        startActivity(userNotRegisteredIntent);
+                    } else {
+                        Intent userSelectionIntent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(userSelectionIntent);
+                    }
                 }
             });
-            boolean usersExist = userViewModel.usersExist().getValue();
 
-            isTablet = checkIsTablet();
-
-            if (isTablet) {
-                System.out.println("This device is a tablet.");
-            } else {
-                System.out.println("This device is a phone.");
-            }
-
-            if (!usersExist) {
-                Intent userNotRegisteredIntent = new Intent(this, RegistrationActivity.class);
-                this.startActivity(userNotRegisteredIntent);
-            } else {
-                Intent userSelectionIntent = new Intent(this, LoginActivity.class);
-                this.startActivity(userSelectionIntent);
-            }
         }
     }
 

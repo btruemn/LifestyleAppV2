@@ -22,8 +22,11 @@ import com.msd.lifestyleapp.model.UserViewModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 public class RegistrationActivity extends AppCompatActivity implements TextView.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -33,6 +36,7 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
 //    private SharedPreferencesHandler prefs;
     private String name, password, confirmPassword, dob, height, weight, sex;
     private UserViewModel userViewModel;
+    private boolean usersExist;
 
     int year, month, day;
 
@@ -122,7 +126,13 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
     @Override
     public void onBackPressed() {
 
-        if (userViewModel.usersExist().getValue()) {
+        userViewModel.getAllUserNames().observe(this, new Observer<List<String>>(){
+            @Override
+            public void onChanged(@Nullable final List<String> names) {
+                usersExist = names.size() > 0;
+            }
+        });
+        if (usersExist) {
             super.onBackPressed();
             return;
         }

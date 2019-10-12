@@ -36,9 +36,9 @@ public class UserViewModel extends AndroidViewModel {
         return mRepository.getAllUserNames();
     }
 
-    public LiveData<Boolean> usersExist(){
-        return mRepository.usersExist();
-    }
+//    public LiveData<Boolean> usersExist(){
+//        return mRepository.usersExist();
+//    }
 
     public LiveData<Boolean> nameAlreadyExists(String name){
         return mRepository.nameAlreadyExists(name);
