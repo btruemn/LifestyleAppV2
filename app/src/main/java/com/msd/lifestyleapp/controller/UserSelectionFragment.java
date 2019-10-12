@@ -14,11 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.msd.lifestyleapp.R;
-import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.UserViewModel;
 
 import java.util.List;
-import java.util.Set;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;

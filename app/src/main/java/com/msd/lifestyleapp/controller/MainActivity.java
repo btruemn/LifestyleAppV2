@@ -5,14 +5,12 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 
 import com.msd.lifestyleapp.R;
-import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.UserViewModel;
 
 import java.util.List;
@@ -24,7 +22,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 

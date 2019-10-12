@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.msd.lifestyleapp.R;
-import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
 import com.msd.lifestyleapp.model.UserViewModel;
 

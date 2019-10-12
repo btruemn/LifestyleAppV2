@@ -22,14 +22,12 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.msd.lifestyleapp.R;
-import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 
 import java.io.File;
 
@@ -46,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
     private static Menu _menu;
     private String username;
     private String path, subPath;
-    private SharedPreferencesHandler prefs;
+//    private SharedPreferencesHandler prefs;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 

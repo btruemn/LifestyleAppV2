@@ -2,7 +2,6 @@ package com.msd.lifestyleapp.controller;
 
 
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,7 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.msd.lifestyleapp.R;
-import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
 import com.msd.lifestyleapp.model.UserViewModel;
 import com.msd.lifestyleapp.weather.JSONWeatherAPI;
@@ -35,7 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class WeatherFragment extends Fragment {
 
-    public SharedPreferencesHandler prefs;
+//    public SharedPreferencesHandler prefs;
     public String username, city, state;
     public TextView locationTv, weatherTv, responseTv, conditionsTv, humidityTv, minTempTv, maxTempTv;
     public ImageView weatherIcon;

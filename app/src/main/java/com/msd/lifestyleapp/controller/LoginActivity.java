@@ -6,13 +6,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.msd.lifestyleapp.R;
-import com.msd.lifestyleapp.model.UserViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
 
 //TODO: fix app so it doesn't crash after enabling location
 
@@ -66,9 +64,9 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         Fragment f = getSupportFragmentManager().findFragmentByTag("selection_frag");
-        if(f == null && !MainActivity.isTablet){
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        this.startActivity(loginIntent);
+        if (f == null && !MainActivity.isTablet) {
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            this.startActivity(loginIntent);
         }
     }
 }

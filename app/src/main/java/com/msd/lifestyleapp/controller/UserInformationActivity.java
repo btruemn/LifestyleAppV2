@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 
 import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.bmr.HealthUtility;
-import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
 import com.msd.lifestyleapp.model.UserViewModel;
 

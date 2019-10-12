@@ -4,7 +4,6 @@ package com.msd.lifestyleapp.controller;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,13 +18,11 @@ import android.widget.TextView;
 
 import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.bmr.HealthUtility;
-import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.User;
 import com.msd.lifestyleapp.model.UserViewModel;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.SQLOutput;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
