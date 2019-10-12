@@ -16,8 +16,11 @@ public interface UserDao {
     @Query("SELECT * FROM User")
     LiveData<List<User>> getAll();
 
-    @Query("SELECT * FROM user WHERE name LIKE :name LIMIT 1")
+    @Query("SELECT * FROM User WHERE name LIKE :name LIMIT 1")
     LiveData<User> findByName(String name);
+
+    @Query("Select name from User")
+    LiveData<List<String>> getNames();
 
     @Insert
     void insert(User user);

@@ -15,10 +15,14 @@ import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.model.SharedPreferencesHandler;
 import com.msd.lifestyleapp.model.UserViewModel;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 
@@ -78,8 +82,13 @@ public class MainActivity extends AppCompatActivity {
         if (!locationEnabled()) {
             buildAlertMessageNoGps();
         } else {
+            userViewModel.getAllUserNames().observe(this, new Observer<List<String>>(){
+                @Override
+                public void onChanged(@Nullable final List<String> names) {
+                    System.out.println("NAMES: " + names.toString());
+                }
+            });
             boolean usersExist = userViewModel.usersExist().getValue();
-            System.out.println("USERNAME LIST: " + userViewModel.getAllUserNames().getValue().toString());
 
             isTablet = checkIsTablet();
 

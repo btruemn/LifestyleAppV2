@@ -12,16 +12,12 @@ import androidx.lifecycle.MutableLiveData;
 public class UserViewModel extends AndroidViewModel {
 
     private UserRepository mRepository;
-//    private LiveData<List<User>> allUsers;
+    private LiveData<List<String>> userNames;
 //    private User activeUser;
 
     public UserViewModel(Application application) {
         super(application);
         mRepository = new UserRepository(application);
-    }
-
-    public LiveData<List<User>> getAllUsers() {
-        return mRepository.getAllUsers();
     }
 
     public LiveData<User> getActiveUser(String name){
