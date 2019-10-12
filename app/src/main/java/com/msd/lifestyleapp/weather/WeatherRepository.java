@@ -27,7 +27,7 @@ public class WeatherRepository {
         jsonWeatherAPI = rf.create(JSONWeatherAPI.class);
     }
 
-    LiveData<Weather> getWeather(String city, String state, String postalCode) {
+    LiveData<Weather> getWeather(String postalCode) {
         weatherCall = jsonWeatherAPI.getWeather(postalCode, "US", "Imperial", apiKey);
 
         weatherCall.enqueue(new Callback<Weather>() {

@@ -34,13 +34,13 @@ import androidx.lifecycle.ViewModelProviders;
  */
 public class WeatherFragment extends Fragment {
 
-    public String username, city, state;
+    public String username, city, state, zipcode;
     public TextView locationTv, weatherTv, responseTv, conditionsTv, humidityTv, minTempTv, maxTempTv;
     public ImageView weatherIcon;
     public ProgressBar mProgressBar;
     private UserViewModel userViewModel;
     private WeatherViewModel weatherViewModel;
-    private User currentUser;
+//    private User currentUser;
 
 
     public WeatherFragment() {
@@ -67,6 +67,10 @@ public class WeatherFragment extends Fragment {
 
         mProgressBar = view.findViewById(R.id.progressBar);
         username = getArguments().getString("username");
+        zipcode = getArguments().getString("zipcode");
+        city = getArguments().getString("city");
+        state = getArguments().getString("state");
+        System.out.println(zipcode + city + state);
         locationTv = view.findViewById(R.id.city_field);
         weatherTv = view.findViewById(R.id.temperature);
         weatherIcon = view.findViewById(R.id.weather_icon);
@@ -75,23 +79,7 @@ public class WeatherFragment extends Fragment {
         minTempTv = view.findViewById(R.id.min_temp_field);
         maxTempTv = view.findViewById(R.id.max_temp_field);
 
-
-       
-        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
-
-            @Override
-            public void onChanged(User user) {
-                currentUser = user;
-
-                setWeatherInfo();
-            }
-        });
-
-        return view;
-    }
-
-    public void setWeatherInfo() {
-        weatherViewModel.getWeather(currentUser.getCity(), currentUser.getState(), currentUser.getPostalCode()).observe(getViewLifecycleOwner(), new Observer<Weather>() {
+        weatherViewModel.getWeather(zipcode).observe(this, new Observer<Weather>() {
             @Override
             public void onChanged(Weather weather) {
                 if (weather != null) {
@@ -118,6 +106,11 @@ public class WeatherFragment extends Fragment {
                 }
             }
         });
+        return view;
+    }
+
+    public void setWeatherInfo() {
+
 
     }
 

@@ -18,7 +18,7 @@ public class WeatherViewModel extends AndroidViewModel {
 
     }
 
-    public LiveData<Weather> getWeather(String city, String state, String postalCode) {
-        return weatherRepository.getWeather(city, state, postalCode);
+    public LiveData<Weather> getWeather(String postalCode) {
+        return weatherRepository.getWeather(postalCode);
     }
 }
