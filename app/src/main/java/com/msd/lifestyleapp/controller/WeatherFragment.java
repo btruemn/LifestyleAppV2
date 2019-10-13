@@ -79,43 +79,38 @@ public class WeatherFragment extends Fragment {
         minTempTv = view.findViewById(R.id.min_temp_field);
         maxTempTv = view.findViewById(R.id.max_temp_field);
 
-        weatherViewModel.getWeather(zipcode).observe(this, new Observer<Weather>() {
-            @Override
-            public void onChanged(Weather weather) {
-                if (weather != null) {
-                    locationTv.setText(city + ", " + state);
-
-                    mProgressBar.setVisibility(View.GONE);
-
-                    chooseWeatherIcon(weather.wi.get(0).getIcon(), weatherIcon);
-
-                    //Round the temperature to one decimal place
-                    double actualTemp = Math.round(weather.temperature.getTemp() * 10) / 10.0;
-                    double actualMin = Math.round(weather.temperature.getTempMin() * 10) / 10.0;
-                    double actualMax = Math.round(weather.temperature.getTempMax() * 10) / 10.0;
-
-                    weatherTv.setText(actualTemp + "°");
-
-                    conditionsTv.setText(weather.wi.get(0).getDescription());
-
-                    humidityTv.setText("Humidity: " + weather.temperature.getHumidity() + "%");
-
-                    minTempTv.setText("Low: " + weather.temperature.getTempMin() + "°");
-
-                    maxTempTv.setText("High: " + weather.temperature.getTempMax() + "°");
-                }
-            }
-        });
+        setWeatherInfo();
         return view;
     }
 
     public void setWeatherInfo() {
+        weatherViewModel.getWeather(zipcode).observe(this, new Observer<Weather>() {
+            @Override
+            public void onChanged(Weather weather) {
+                locationTv.setText(city + ", " + state);
 
+                mProgressBar.setVisibility(View.GONE);
+
+                chooseWeatherIcon(weather.wi.get(0).getIcon(), weatherIcon);
+
+                //Round the temperature to one decimal place
+                double actualTemp = Math.round(weather.temperature.getTemp() * 10) / 10.0;
+                double actualMin = Math.round(weather.temperature.getTempMin() * 10) / 10.0;
+                double actualMax = Math.round(weather.temperature.getTempMax() * 10) / 10.0;
+
+                weatherTv.setText(actualTemp + "°");
+
+                conditionsTv.setText(weather.wi.get(0).getDescription());
+
+                humidityTv.setText("Humidity: " + weather.temperature.getHumidity() + "%");
+
+                minTempTv.setText("Low: " + weather.temperature.getTempMin() + "°");
+
+                maxTempTv.setText("High: " + weather.temperature.getTempMax() + "°");
+            }
+        });
 
     }
-
-//        mProgressBar = new ProgressBar(this.getContext());
-//        mProgressBar.setVisibility(View.VISIBLE);
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

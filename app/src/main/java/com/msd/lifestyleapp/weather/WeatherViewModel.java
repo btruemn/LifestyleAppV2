@@ -19,6 +19,7 @@ public class WeatherViewModel extends AndroidViewModel {
     }
 
     public LiveData<Weather> getWeather(String postalCode) {
+        if (weather == null) { weather = weatherRepository.getWeather(postalCode);}
         return weatherRepository.getWeather(postalCode);
     }
 }
