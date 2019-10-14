@@ -12,21 +12,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.msd.lifestyleapp.R;
-import com.msd.lifestyleapp.model.User;
-import com.msd.lifestyleapp.model.UserRepository;
 import com.msd.lifestyleapp.model.UserViewModel;
 import com.msd.lifestyleapp.weather.Weather;
 import com.msd.lifestyleapp.weather.WeatherViewModel;
 
-import java.lang.ref.WeakReference;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProviders;
 
 /**

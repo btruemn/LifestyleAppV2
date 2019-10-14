@@ -92,8 +92,8 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
 
                 healthUtility = new HealthUtility(weight, height, sex, dob);
 
-                setViews(view);
                 _view = view;
+                setViews(_view);
             }
         });
 
@@ -193,7 +193,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
 
                 healthUtility = new HealthUtility(weight, height, sex, dob);
 
-                setSpinners(_view);
+                if(_view != null) setSpinners(_view);
 
                 if (_menu != null) {
                     getActivity().onCreateOptionsMenu(_menu);
