@@ -51,6 +51,14 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
     double latitude, longitude;
 
     public AuthenticationFragment() {
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+
     }
 
 
@@ -101,16 +109,21 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
 
         view.findViewById(R.id.submitPassword).setOnClickListener(this);
 
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+
+
         if (isTablet) {
             System.out.println("Using tablet");
+            Bundle bundle = this.getArguments();
+            username = bundle.getString("username", "failure");
+            System.out.println("USERNAME: " + username);
         } else {
             System.out.println("Using phone");
             Bundle bundle = this.getArguments();
             username = bundle.getString("username", "failure");
             System.out.println("USERNAME: " + username);
-
-            // Get a new or existing ViewModel from the ViewModelProvider.
-            userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
             userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
                 @Override
@@ -121,7 +134,6 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
                     nameDisplay.setText("Enter password for: " + currentUser.getName());
                 }
             });
-
 
         }
 
@@ -137,9 +149,8 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
                 if (isTablet) {
                     nameDisplay = getActivity().findViewById(R.id.nameDisplay);
                     username = nameDisplay.getText().toString().split(":")[1].trim();
+                    System.out.println("USERNAME: " + username);
 
-                    // Get a new or existing ViewModel from the ViewModelProvider.
-                    userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
                     System.out.println(username);
 
                     userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
@@ -147,9 +158,7 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
                         public void onChanged(User user) {
                             currentUser = user;
                         }
-
                     });
-
                 }
                 passwordTextView = getActivity().findViewById(R.id.passwordInput);
                 String password = passwordTextView.getText().toString();

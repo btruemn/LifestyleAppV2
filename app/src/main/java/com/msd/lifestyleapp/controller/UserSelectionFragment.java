@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -58,7 +59,7 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
 //        prefs = new SharedPreferencesHandler(view.getContext()); /////WILL THIS WORK?
 
         // Get a new or existing ViewModel from the ViewModelProvider.
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
         registerUserButton = view.findViewById(R.id.registerNewUserButton);
         registerUserButton.setOnClickListener(this);
@@ -129,15 +130,20 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
     }
 
     public void tabletUserSelection(String username) {
-//        TextView nameDisplay = view.findViewById(R.id.nameDisplay);
 
-        AuthenticationFragment authenticationFragment = (AuthenticationFragment) getFragmentManager().findFragmentByTag("login_frag");
+        userViewModel.setUsername(username);
+        //        TextView nameDisplay = view.findViewById(R.id.nameDisplay);
 
-        FrameLayout layout = authenticationFragment.getActivity().findViewById(R.id.loginContainer);
-        TextView nameDisplay = authenticationFragment.getActivity().findViewById(R.id.nameDisplay);
-        layout.setVisibility(View.VISIBLE);
-
-        nameDisplay.setText("Enter password for: " + username);
+//        AuthenticationFragment authenticationFragment = (AuthenticationFragment) getFragmentManager().findFragmentByTag("login_frag");
+//
+//        FrameLayout layout = authenticationFragment.getActivity().findViewById(R.id.loginContainer);
+//        TextView nameDisplay = authenticationFragment.getActivity().findViewById(R.id.nameDisplay);
+//
+//        Bundle bundle = new Bundle();
+//        bundle.putString("username", username);
+//        authenticationFragment.setArguments(bundle);
+//        nameDisplay.setText("Enter password for: " + username);
+//        layout.setVisibility(View.VISIBLE);
     }
 
     public void phoneUserSelection(String username) {

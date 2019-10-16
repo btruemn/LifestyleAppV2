@@ -6,11 +6,15 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.msd.lifestyleapp.R;
+import com.msd.lifestyleapp.model.UserViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 //TODO: fix app so it doesn't crash after enabling location
 
@@ -18,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private UserViewModel userViewModel;
 //    private UserViewModel userViewModel;
 
 
@@ -37,12 +42,28 @@ public class LoginActivity extends AppCompatActivity {
             layout.setVisibility(View.GONE);
             //this is a tablet...render UserSelectionFragment and AuthenticationFragment
             UserSelectionFragment selectionFragment = new UserSelectionFragment();
-            AuthenticationFragment authenticationFragment = new AuthenticationFragment();
-
             fragmentTransaction.replace(R.id.userSelectionContainer, selectionFragment, "selection_frag");
-            fragmentTransaction.replace(R.id.loginContainer, authenticationFragment, "login_frag");
-
             fragmentTransaction.commit();
+
+            // Get a new or existing ViewModel from the ViewModelProvider.
+            userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+            userViewModel.getUsername().observe(this, new Observer<String>() {
+                @Override
+                public void onChanged(String s) {
+                    if (s != null && s != "blah") {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(s, "username");
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        AuthenticationFragment authenticationFragment = new AuthenticationFragment();
+                        authenticationFragment.setArguments(bundle);
+                        fragmentTransaction.replace(R.id.loginContainer, authenticationFragment, "login_frag");
+                        fragmentTransaction.commit();
+                        FrameLayout layout = findViewById(R.id.loginContainer);
+                        layout.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
 
         } else {
             //hide the login fragment

@@ -14,11 +14,23 @@ public class UserViewModel extends AndroidViewModel {
     private UserRepository mRepository;
     private LiveData<List<String>> userNames;
     private User currentUser;
+    private MutableLiveData<String> username;
 
     public UserViewModel(Application application) {
         super(application);
         mRepository = new UserRepository(application);
+        username = new MutableLiveData<>("blah");
     }
+
+    public MutableLiveData<String> getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username.setValue(username);
+    }
+
+
 
     public LiveData<User> getCurrentUser(String name) {
         return mRepository.getCurrentUser(name);
