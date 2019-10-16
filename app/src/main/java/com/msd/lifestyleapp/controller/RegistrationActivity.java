@@ -96,6 +96,18 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
 //        prefs = new SharedPreferencesHandler(this);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        userViewModel.getAllUserNames().removeObservers(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        userViewModel.getAllUserNames().removeObservers(this);
+    }
+
     public static ArrayList<String> getAges() {
         ArrayList<String> ages = new ArrayList<>();
         ages.add("");

@@ -63,7 +63,7 @@ public class WeatherFragment extends Fragment {
         zipcode = getArguments().getString("zipcode");
         city = getArguments().getString("city");
         state = getArguments().getString("state");
-        System.out.println(zipcode + city + state);
+        System.out.println("ZIP: " + zipcode + ", CITY: " + city + ", STATE: " + state);
         locationTv = view.findViewById(R.id.city_field);
         weatherTv = view.findViewById(R.id.temperature);
         weatherIcon = view.findViewById(R.id.weather_icon);
@@ -80,29 +80,30 @@ public class WeatherFragment extends Fragment {
         weatherViewModel.getWeather(zipcode).observe(this, new Observer<Weather>() {
             @Override
             public void onChanged(Weather weather) {
-                locationTv.setText(city + ", " + state);
+                if(weather != null) {
+                    locationTv.setText(city + ", " + state);
 
-                mProgressBar.setVisibility(View.GONE);
+                    mProgressBar.setVisibility(View.GONE);
 
-                chooseWeatherIcon(weather.wi.get(0).getIcon(), weatherIcon);
+                    chooseWeatherIcon(weather.wi.get(0).getIcon(), weatherIcon);
 
-                //Round the temperature to one decimal place
-                double actualTemp = Math.round(weather.temperature.getTemp() * 10) / 10.0;
-                double actualMin = Math.round(weather.temperature.getTempMin() * 10) / 10.0;
-                double actualMax = Math.round(weather.temperature.getTempMax() * 10) / 10.0;
+                    //Round the temperature to one decimal place
+                    double actualTemp = Math.round(weather.temperature.getTemp() * 10) / 10.0;
+                    double actualMin = Math.round(weather.temperature.getTempMin() * 10) / 10.0;
+                    double actualMax = Math.round(weather.temperature.getTempMax() * 10) / 10.0;
 
-                weatherTv.setText(actualTemp + "°");
+                    weatherTv.setText(actualTemp + "°");
 
-                conditionsTv.setText(weather.wi.get(0).getDescription());
+                    conditionsTv.setText(weather.wi.get(0).getDescription());
 
-                humidityTv.setText("Humidity: " + weather.temperature.getHumidity() + "%");
+                    humidityTv.setText("Humidity: " + weather.temperature.getHumidity() + "%");
 
-                minTempTv.setText("Low: " + weather.temperature.getTempMin() + "°");
+                    minTempTv.setText("Low: " + weather.temperature.getTempMin() + "°");
 
-                maxTempTv.setText("High: " + weather.temperature.getTempMax() + "°");
+                    maxTempTv.setText("High: " + weather.temperature.getTempMax() + "°");
+                }
             }
         });
-
     }
 
     @Override
