@@ -121,6 +121,13 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
             System.out.println("USERNAME: " + username);
             nameDisplay = view.findViewById(R.id.nameDisplay);
             nameDisplay.setText("Enter password for: " + username);
+
+            userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+                    currentUser = user;
+                }
+            });
         } else {
             System.out.println("Using phone");
             Bundle bundle = this.getArguments();
@@ -171,7 +178,6 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
                     //update user's location
                     String[] cityAndState = getCityStateAndPostalFromLatLong(latitude, longitude);
 
-
                     if (cityAndState.length != 0) {
                         //city
                         String city = cityAndState[0];
@@ -182,6 +188,9 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
 
                         currentUser.setCity(city);
                         currentUser.setState(state);
+                        System.out.println("AuthFrag POSTAL CODE: " + postalCode);
+                        System.out.println("AuthFrag CITY: " + city);
+                        System.out.println("AuthFrag STATE: " + state);
                         currentUser.setPostalCode(postalCode);
                         userViewModel.update(currentUser);
 

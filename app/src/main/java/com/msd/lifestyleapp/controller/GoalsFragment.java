@@ -74,7 +74,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
         username = getArguments().getString("username");
 
         // Get a new or existing ViewModel from the ViewModelProvider.
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
 
         userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
@@ -140,6 +140,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
 
         ArrayAdapter<String> poundsAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item2, poundsArray);
         poundsSpinner.setAdapter(poundsAdapter);
+//        System.out.println("LBS/WK: " + poundsPerWeek);
         int poundsSpinnerPosition = poundsPerWeek == null ? 0 : activityAdapter.getPosition(poundsPerWeek);
         poundsSpinner.setSelection(poundsSpinnerPosition);
 

@@ -223,6 +223,10 @@ public class HomeActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putString("username", username);
+        System.out.println("HOME POSTAL CODE: " + currentUser.getPostalCode());
+        bundle.putString("zipcode", currentUser.getPostalCode());
+        bundle.putString("city", currentUser.getCity());
+        bundle.putString("state", currentUser.getState());
 
         WeatherFragment weatherFrag = new WeatherFragment();
         weatherFrag.setArguments(bundle);
