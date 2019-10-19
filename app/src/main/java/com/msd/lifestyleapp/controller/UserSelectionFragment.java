@@ -69,9 +69,11 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
 
         //all users stored in shared preferences
 //        Set<String> names = prefs.getNames();
-        userViewModel.getAllUserNames().observe(this, new Observer<List<String>>() {
+        userViewModel.getAllUserNames().observe(getActivity(), new Observer<List<String>>() {
             @Override
             public void onChanged(@Nullable final List<String> names) {
+                System.out.print("ALL USERS CHANGED: ");
+                System.out.println(names.toString());
                 //loop through all users creating buttons for each of them
                 int startId = (registerUserButton.getId()) + 1;
                 for (String name : names) {
@@ -102,6 +104,7 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        userViewModel.getAllUserNames().removeObservers(getActivity());
 
         //the user chose to register a new account...direct them to the registration page
         if (view.getId() == R.id.registerNewUserButton) {
@@ -152,7 +155,7 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
         fragmentTransaction = fragmentManager.beginTransaction();
         AuthenticationFragment authenticationFragment = new AuthenticationFragment();
         Bundle bundle = new Bundle();
-        System.out.println("PhoneUserSelection for user " + username);
+//        System.out.println("PhoneUserSelection for user " + username);
         bundle.putString("username", username);
         authenticationFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.userSelectionContainer, authenticationFragment, "login_frag");

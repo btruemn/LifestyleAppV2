@@ -122,12 +122,12 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
         ImageView profPic = findViewById(R.id.profile_image);
 
         if (file.exists()) {
-            System.out.println("directory exists");
+//            System.out.println("directory exists");
             Bitmap imageMap = BitmapFactory.decodeFile(file.toString());
             profPic.setImageBitmap(imageMap);
 
         } else {
-            System.out.println("directory doesn't exist");
+//            System.out.println("directory doesn't exist");
             Drawable defaultPic = getResources().getDrawable(R.drawable.no_picture);
             profPic.setImageDrawable(defaultPic);
         }
@@ -140,7 +140,7 @@ public class UserInformationActivity extends AppCompatActivity implements TextVi
 
         if (file.exists()) {
             file.delete();
-            System.out.println("user image deleted");
+//            System.out.println("user image deleted");
         }
     }
 

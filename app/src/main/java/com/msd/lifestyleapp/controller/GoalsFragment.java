@@ -180,7 +180,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+        userViewModel.getCurrentUser(username).observe(getActivity(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
                 username = user.getName();
@@ -303,7 +303,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
             double caloriesRequired = getCalorieGoal();
 
             if (sex.equals("Male")) {
-                System.out.println("sex: " + sex);
+//                System.out.println("sex: " + sex);
                 if (caloriesRequired < 1200.0) {
                     weightGoalAlert();
                 }
@@ -318,7 +318,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
 
             currentUser.setFitnessGoal(weightGoalSpinner.getSelectedItem().toString());
             currentUser.setActivityLevel(activityLevelSpinner.getSelectedItem().toString());
-            System.out.println("LBS/WEEK: " + poundsSpinner.getSelectedItem().toString());
+//            System.out.println("LBS/WEEK: " + poundsSpinner.getSelectedItem().toString());
             currentUser.setPoundsPerWeek(poundsSpinner.getSelectedItem().toString());
             userViewModel.update(currentUser);
 

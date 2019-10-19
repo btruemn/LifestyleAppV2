@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable final List<String> names) {
                     // Update the cached copy of the words in the adapter.
-                    System.out.println("NAMES: " + names.toString());
+//                    System.out.println("NAMES: " + names.toString());
                     usersExist = names.size() > 0;
 
                     isTablet = checkIsTablet();
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("NEED TO REQUEST PERMISSIONS");
+//            System.out.println("NEED TO REQUEST PERMISSIONS");
             return false;
         }
         return true;

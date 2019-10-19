@@ -85,7 +85,7 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("NEED TO REQUEST PERMISSIONS");
+//            System.out.println("NEED TO REQUEST PERMISSIONS");
             return view;
         }
 
@@ -96,13 +96,13 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
             latitude = location.getLatitude();
             longitude = location.getLongitude();
 
-            System.out.println("Latitude: " + latitude);
-            System.out.println("Longitude: " + longitude);
+//            System.out.println("Latitude: " + latitude);
+//            System.out.println("Longitude: " + longitude);
 
         } else {
             latitude = 40.768591;
             longitude = -111.846070;
-            System.out.println("Location is null");
+//            System.out.println("Location is null");
         }
 
 //        getActivity().findViewById(R.id.submitPassword).setOnClickListener(this);
@@ -110,31 +110,31 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
         view.findViewById(R.id.submitPassword).setOnClickListener(this);
 
         // Get a new or existing ViewModel from the ViewModelProvider.
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
 
 
         if (isTablet) {
-            System.out.println("Using tablet");
+//            System.out.println("Using tablet");
             Bundle bundle = this.getArguments();
             username = bundle.getString("username", "failure");
-            System.out.println("USERNAME: " + username);
+//            System.out.println("USERNAME: " + username);
             nameDisplay = view.findViewById(R.id.nameDisplay);
             nameDisplay.setText("Enter password for: " + username);
 
-            userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            userViewModel.getCurrentUser(username).observe(getActivity(), new Observer<User>() {
                 @Override
                 public void onChanged(User user) {
                     currentUser = user;
                 }
             });
         } else {
-            System.out.println("Using phone");
+//            System.out.println("Using phone");
             Bundle bundle = this.getArguments();
             username = bundle.getString("username", "failure");
-            System.out.println("USERNAME: " + username);
+//            System.out.println("USERNAME: " + username);
 
-            userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+            userViewModel.getCurrentUser(username).observe(getActivity(), new Observer<User>() {
                 @Override
                 public void onChanged(User user) {
                     currentUser = user;
@@ -154,15 +154,15 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.submitPassword: {
-
+                userViewModel.getAllUserNames().removeObservers(getActivity());
                 if (isTablet) {
                     nameDisplay = getActivity().findViewById(R.id.nameDisplay);
                     username = nameDisplay.getText().toString().split(":")[1].trim();
-                    System.out.println("USERNAME: " + username);
+//                    System.out.println("USERNAME: " + username);
+//
+//                    System.out.println(username);
 
-                    System.out.println(username);
-
-                    userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+                    userViewModel.getCurrentUser(username).observe(getActivity(), new Observer<User>() {
                         @Override
                         public void onChanged(User user) {
                             currentUser = user;
@@ -188,9 +188,9 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
 
                         currentUser.setCity(city);
                         currentUser.setState(state);
-                        System.out.println("AuthFrag POSTAL CODE: " + postalCode);
-                        System.out.println("AuthFrag CITY: " + city);
-                        System.out.println("AuthFrag STATE: " + state);
+//                        System.out.println("AuthFrag POSTAL CODE: " + postalCode);
+//                        System.out.println("AuthFrag CITY: " + city);
+//                        System.out.println("AuthFrag STATE: " + state);
                         currentUser.setPostalCode(postalCode);
                         userViewModel.update(currentUser);
 
@@ -218,7 +218,7 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
         } catch (Exception e) {
-            System.out.println("Geocoder: Unable to retreive address from latitude/longitude");
+//            System.out.println("Geocoder: Unable to retreive address from latitude/longitude");
             return new String[]{};
         }
 
@@ -226,7 +226,7 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
             city = addresses.get(0).getLocality();
             state = addresses.get(0).getAdminArea();
             postalCode = addresses.get(0).getPostalCode();
-            System.out.println("AuthFrag PostalCode: " + postalCode);
+//            System.out.println("AuthFrag PostalCode: " + postalCode);
             return new String[]{city, state, postalCode};
         } else {
             Toast.makeText(this.getActivity(), "Unable to retrieve your location.",
@@ -242,7 +242,7 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("NEED TO REQUEST PERMISSIONS");
+//            System.out.println("NEED TO REQUEST PERMISSIONS");
             return;
         }
         locationManager.requestLocationUpdates(provider, 400, 1, this);

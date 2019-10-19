@@ -175,7 +175,7 @@ public class RegistrationActivity extends AppCompatActivity implements TextView.
                             //storing all of the user's values in db
                             User user = new User(name, dob, height, Integer.parseInt(weight), sex, password);
                             userViewModel.insert(user);
-                            System.out.println("User " + name + " added!");
+//                            System.out.println("User " + name + " added!");
 
                             //here we will start the new intent to the user selection page
                             Intent userSelectionIntent = new Intent(RegistrationActivity.this, LoginActivity.class);

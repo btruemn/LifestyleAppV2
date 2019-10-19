@@ -80,7 +80,7 @@ public class UserRepository {
 
         @Override
         protected Void doInBackground(final User... params) {
-            System.out.println("IN BACKGROUND: " + params[0].toString());
+//            System.out.println("IN BACKGROUND: " + params[0].toString());
             mAsyncTaskDao.insert(params[0]);
             return null;
         }

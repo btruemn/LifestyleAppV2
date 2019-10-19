@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String res = intent.getStringExtra("image_update");
-            System.out.println("INTENT RECEIVED");
+//            System.out.println("INTENT RECEIVED");
             if (res != null) {
                 onCreateOptionsMenu(_menu);
             }
@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
 
         Intent receivedIntent = getIntent();
         username = receivedIntent.getStringExtra("username");
-        System.out.println(username + " reached the home page!");
+//        System.out.println(username + " reached the home page!");
 
         Toolbar toolbar = findViewById(R.id.app_bar);
         toolbar.setTitle("Home");
@@ -109,7 +109,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void getGoalsModule(View view) {
         if (MainActivity.isTablet) {
-            System.out.println("tablet goals requested");
+//            System.out.println("tablet goals requested");
             tabletGoals();
         } else {
             phoneGoals();
@@ -223,7 +223,7 @@ public class HomeActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putString("username", username);
-        System.out.println("HOME POSTAL CODE: " + currentUser.getPostalCode());
+//        System.out.println("HOME POSTAL CODE: " + currentUser.getPostalCode());
         bundle.putString("zipcode", currentUser.getPostalCode());
         bundle.putString("city", currentUser.getCity());
         bundle.putString("state", currentUser.getState());
@@ -236,7 +236,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        System.out.println("RECEIVED INTENT");
+//        System.out.println("RECEIVED INTENT");
         String image = intent.getStringExtra("image_update");
         if (image != null) {
             onCreateOptionsMenu(_menu);
@@ -331,8 +331,8 @@ public class HomeActivity extends AppCompatActivity {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
 
-            System.out.println("Latitude: " + latitude);
-            System.out.println("Longitude: " + longitude);
+//            System.out.println("Latitude: " + latitude);
+//            System.out.println("Longitude: " + longitude);
 
         } else {
             System.out.println("Location is null");
@@ -358,14 +358,14 @@ public class HomeActivity extends AppCompatActivity {
         File file = new File(myDir, "/" + subPath);
 
         if (file.exists()) {
-            System.out.println("directory exists");
+//            System.out.println("directory exists");
             Bitmap imageMap = BitmapFactory.decodeFile(file.toString());
 
             imageMap = getCircularBitmapWithWhiteBorder(imageMap, 1);
             Drawable drawable = new BitmapDrawable(getResources(), imageMap);
             menu.getItem(1).setIcon(drawable);
         } else {
-            System.out.println("directory doesn't exist");
+//            System.out.println("directory doesn't exist");
             Drawable defaultPic = getResources().getDrawable(R.drawable.no_picture);
             menu.getItem(1).setIcon(defaultPic);
         }
