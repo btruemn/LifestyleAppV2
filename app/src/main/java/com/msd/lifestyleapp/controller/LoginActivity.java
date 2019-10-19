@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onChanged(String s) {
                     if (s != null && s != "blah") {
                         Bundle bundle = new Bundle();
-                        bundle.putString(s, "username");
+                        bundle.putString("username", s);
                         fragmentTransaction = fragmentManager.beginTransaction();
                         AuthenticationFragment authenticationFragment = new AuthenticationFragment();
                         authenticationFragment.setArguments(bundle);

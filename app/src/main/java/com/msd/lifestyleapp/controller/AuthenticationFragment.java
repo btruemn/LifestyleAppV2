@@ -119,6 +119,8 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
             Bundle bundle = this.getArguments();
             username = bundle.getString("username", "failure");
             System.out.println("USERNAME: " + username);
+            nameDisplay = view.findViewById(R.id.nameDisplay);
+            nameDisplay.setText("Enter password for: " + username);
         } else {
             System.out.println("Using phone");
             Bundle bundle = this.getArguments();
