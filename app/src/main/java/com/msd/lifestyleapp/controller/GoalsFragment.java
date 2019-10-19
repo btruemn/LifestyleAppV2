@@ -77,7 +77,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
 
 
-        userViewModel.getCurrentUser(username).observe(this, new Observer<User>() {
+        userViewModel.getCurrentUser(username).observe(getActivity(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
                 currentUser = user;

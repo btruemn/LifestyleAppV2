@@ -226,6 +226,7 @@ public class AuthenticationFragment extends Fragment implements View.OnClickList
             city = addresses.get(0).getLocality();
             state = addresses.get(0).getAdminArea();
             postalCode = addresses.get(0).getPostalCode();
+            System.out.println("AuthFrag PostalCode: " + postalCode);
             return new String[]{city, state, postalCode};
         } else {
             Toast.makeText(this.getActivity(), "Unable to retrieve your location.",
