@@ -89,11 +89,13 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
                 weightGoal = user.getFitnessGoal();
                 activityLevel = user.getActivityLevel();
                 poundsPerWeek = user.getPoundsPerWeek();
+//                System.out.println("LBS/WEEK: " + poundsPerWeek);
 
                 healthUtility = new HealthUtility(weight, height, sex, dob);
 
                 _view = view;
                 setViews(_view);
+                setSpinners(_view);
             }
         });
 
@@ -140,8 +142,9 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
 
         ArrayAdapter<String> poundsAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item2, poundsArray);
         poundsSpinner.setAdapter(poundsAdapter);
-//        System.out.println("LBS/WK: " + poundsPerWeek);
-        int poundsSpinnerPosition = poundsPerWeek == null ? 0 : activityAdapter.getPosition(poundsPerWeek);
+        System.out.println("LBS/WK: " + poundsPerWeek);
+        int position = poundsAdapter.getPosition(poundsPerWeek);
+        int poundsSpinnerPosition = poundsPerWeek == null ? 0 : position;
         poundsSpinner.setSelection(poundsSpinnerPosition);
 
         weightGoalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

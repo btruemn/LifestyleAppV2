@@ -54,9 +54,8 @@ public class UserSelectionFragment extends Fragment implements View.OnClickListe
         View view = inflater.inflate(R.layout.fragment_user_selection, container, false);
 
 //        setContentView(R.layout.activity_userselection);
-//        getSupportActionBar().setTitle("Lifestyle");
-
-//        prefs = new SharedPreferencesHandler(view.getContext()); /////WILL THIS WORK?
+//        getS
+//        prefs = new SharupportActionBar().setTitle("Lifestyle");edPreferencesHandler(view.getContext()); /////WILL THIS WORK?
 
         // Get a new or existing ViewModel from the ViewModelProvider.
         userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
