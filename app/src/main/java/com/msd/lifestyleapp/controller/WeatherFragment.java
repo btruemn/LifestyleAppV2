@@ -98,9 +98,9 @@ public class WeatherFragment extends Fragment {
 
                     humidityTv.setText("Humidity: " + weather.temperature.getHumidity() + "%");
 
-                    minTempTv.setText("Low: " + weather.temperature.getTempMin() + "°");
+                    minTempTv.setText("Low: " + actualMin + "°");
 
-                    maxTempTv.setText("High: " + weather.temperature.getTempMax() + "°");
+                    maxTempTv.setText("High: " + actualMax + "°");
                 }
             }
         });
