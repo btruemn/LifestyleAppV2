@@ -95,7 +95,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
 
                 _view = view;
                 setViews(_view);
-                setSpinners(_view);
+//                setSpinners(_view);
             }
         });
 
@@ -130,42 +130,44 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
         weightGoalSpinner = view.findViewById(R.id.weight_spinner);
         poundsSpinner = view.findViewById(R.id.pounds_spinner);
 
-        ArrayAdapter<String> activityAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item2, activityLevelArray);
-        activityLevelSpinner.setAdapter(activityAdapter);
-        int activitySpinnerPosition = activityLevel == null ? 0 : activityAdapter.getPosition(activityLevel);
-        activityLevelSpinner.setSelection(activitySpinnerPosition);
+        if(getActivity() != null) {
+            ArrayAdapter<String> activityAdapter = new ArrayAdapter<>(this.getActivity(), R.layout.spinner_item2, activityLevelArray);
+            activityLevelSpinner.setAdapter(activityAdapter);
+            int activitySpinnerPosition = activityLevel == null ? 0 : activityAdapter.getPosition(activityLevel);
+            activityLevelSpinner.setSelection(activitySpinnerPosition);
 
-        ArrayAdapter<String> weightAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item2, weightGoalArray);
-        weightGoalSpinner.setAdapter(weightAdapter);
-        int weightSpinnerPosition = weightGoal == null ? 0 : weightAdapter.getPosition(weightGoal);
-        weightGoalSpinner.setSelection(weightSpinnerPosition);
+            ArrayAdapter<String> weightAdapter = new ArrayAdapter<>(this.getActivity(), R.layout.spinner_item2, weightGoalArray);
+            weightGoalSpinner.setAdapter(weightAdapter);
+            int weightSpinnerPosition = weightGoal == null ? 0 : weightAdapter.getPosition(weightGoal);
+            weightGoalSpinner.setSelection(weightSpinnerPosition);
 
-        ArrayAdapter<String> poundsAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_item2, poundsArray);
-        poundsSpinner.setAdapter(poundsAdapter);
-        System.out.println("LBS/WK: " + poundsPerWeek);
-        int position = poundsAdapter.getPosition(poundsPerWeek);
-        int poundsSpinnerPosition = poundsPerWeek == null ? 0 : position;
-        poundsSpinner.setSelection(poundsSpinnerPosition);
+            ArrayAdapter<String> poundsAdapter = new ArrayAdapter<>(this.getActivity(), R.layout.spinner_item2, poundsArray);
+            poundsSpinner.setAdapter(poundsAdapter);
+            System.out.println("LBS/WEEK1: " + poundsPerWeek);
+            int position = poundsAdapter.getPosition(poundsPerWeek);
+            int poundsSpinnerPosition = poundsPerWeek == null ? 0 : position;
+            poundsSpinner.setSelection(poundsSpinnerPosition);
 
-        weightGoalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                LinearLayout layout = view.findViewById(R.id.pounds_view);
+            weightGoalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    LinearLayout layout = view.findViewById(R.id.pounds_view);
 
-                if (position == 2) {
-                    layout.setVisibility(View.GONE);
+                    if (position == 2) {
+                        layout.setVisibility(View.GONE);
+                    }
+
+                    if (position == 0 || position == 1) {
+                        layout.setVisibility(View.VISIBLE);
+                    }
                 }
 
-                if (position == 0 || position == 1) {
-                    layout.setVisibility(View.VISIBLE);
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
                 }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-            }
-
-        });
+            });
+        }
 
     }
 
@@ -178,38 +180,42 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onPause() {
         super.onPause();
+//        userViewModel.getCurrentUser(username).removeObservers(getActivity());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        userViewModel.getCurrentUser(username).observe(getActivity(), new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                username = user.getName();
-                height = user.getHeight();
-                dob = user.getDob();
-                sex = user.getSex();
-                weight = user.getWeight();
-                weightGoal = user.getFitnessGoal();
-                activityLevel = user.getActivityLevel();
-                poundsPerWeek = user.getPoundsPerWeek();
-
-                healthUtility = new HealthUtility(weight, height, sex, dob);
-
-                if(_view != null) setSpinners(_view);
-
-                if (_menu != null) {
-                    getActivity().onCreateOptionsMenu(_menu);
-                }
-
-                if (goalDisplay.getVisibility() != View.INVISIBLE) {
-                    getCaloriesButton.performClick();
-                }
-            }
-        });
-
-
+//        userViewModel.getCurrentUser(username).removeObservers(getActivity());
+//        if (getActivity() != null) {
+//            userViewModel.getCurrentUser(username).observe(this.getActivity(), new Observer<User>() {
+//                @Override
+//                public void onChanged(User user) {
+//                    if (user != null) {
+//                        username = user.getName();
+//                        height = user.getHeight();
+//                        dob = user.getDob();
+//                        sex = user.getSex();
+//                        weight = user.getWeight();
+//                        weightGoal = user.getFitnessGoal();
+//                        activityLevel = user.getActivityLevel();
+//                        poundsPerWeek = user.getPoundsPerWeek();
+//
+//                        healthUtility = new HealthUtility(weight, height, sex, dob);
+//
+//                        if (_view != null) setSpinners(_view);
+//
+//                        if (_menu != null) {
+//                            getActivity().onCreateOptionsMenu(_menu);
+//                        }
+//
+//                        if (goalDisplay.getVisibility() != View.INVISIBLE) {
+//                            getCaloriesButton.performClick();
+//                        }
+//                    }
+//                }
+//            });
+//        }
     }
 
 
@@ -321,7 +327,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener {
 
             currentUser.setFitnessGoal(weightGoalSpinner.getSelectedItem().toString());
             currentUser.setActivityLevel(activityLevelSpinner.getSelectedItem().toString());
-//            System.out.println("LBS/WEEK: " + poundsSpinner.getSelectedItem().toString());
+            System.out.println("LBS/WEEK2: " + poundsSpinner.getSelectedItem().toString());
             currentUser.setPoundsPerWeek(poundsSpinner.getSelectedItem().toString());
             userViewModel.update(currentUser);
 
