@@ -9,6 +9,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+import com.amazonaws.mobileconnectors.s3.transferutility.*;
 
 @Database(entities = {User.class}, version = 1, exportSchema = false)
 public abstract class UserRoomDatabase extends RoomDatabase {

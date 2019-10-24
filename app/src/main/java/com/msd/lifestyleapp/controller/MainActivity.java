@@ -10,9 +10,17 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.msd.lifestyleapp.R;
 import com.msd.lifestyleapp.model.UserViewModel;
 
+import java.io.File;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -39,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isTablet;
     private UserViewModel userViewModel;
     private boolean usersExist;
+    private static final String LOG_TAG = MainActivity.class.getName();
 
 
     @Override
@@ -48,7 +57,121 @@ public class MainActivity extends AppCompatActivity {
 
         // Get a new or existing ViewModel from the ViewModelProvider.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        AWSMobileClient.getInstance().initialize(this).execute();
+        uploadWithTransferUtility();
+        downloadWithTransferUtility();
+
     }
+
+    public void uploadWithTransferUtility() {
+
+//        String KEY = "AKIATX7DK4M6QDYYMQWI";
+//        String SECRET = "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";
+//        BasicAWSCredentials credentials = new BasicAWSCredentials(KEY,SECRET);
+//        AmazonS3Client s3Client = new AmazonS3Client(credentials);
+
+        TransferUtility transferUtility =
+                TransferUtility.builder()
+                        .context(getApplicationContext())
+                        .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentialsProvider()))
+                        .build();
+
+        TransferObserver uploadObserver =
+                transferUtility.upload(
+                        "s3Folder/s3Key.txt",
+                        new File("/path/to/file/localFile.txt"));
+
+        // Attach a listener to the observer to get state update and progress notifications
+        uploadObserver.setTransferListener(new TransferListener() {
+
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (TransferState.COMPLETED == state) {
+                    // Handle a completed upload.
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                int percentDone = (int)percentDonef;
+
+                Log.d("YourActivity", "ID:" + id + " bytesCurrent: " + bytesCurrent
+                        + " bytesTotal: " + bytesTotal + " " + percentDone + "%");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                // Handle errors
+            }
+
+        });
+
+        // If you prefer to poll for the data, instead of attaching a
+        // listener, check for the state and progress in the observer.
+        if (TransferState.COMPLETED == uploadObserver.getState()) {
+            // Handle a completed upload.
+        }
+
+        Log.d("YourActivity", "Bytes Transferrred: " + uploadObserver.getBytesTransferred());
+        Log.d("YourActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
+    }
+
+    private void downloadWithTransferUtility() {
+
+//        String KEY = "AKIATX7DK4M6QDYYMQWI";
+//        String SECRET = "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";
+//        BasicAWSCredentials credentials = new BasicAWSCredentials(KEY,SECRET);
+//        AmazonS3Client s3Client = new AmazonS3Client(credentials);
+
+        TransferUtility transferUtility =
+                TransferUtility.builder()
+                        .context(getApplicationContext())
+                        .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                        .s3Client(new AmazonS3Client(AWSMobileClient.getInstance().getCredentialsProvider()))
+                        .build();
+
+        TransferObserver downloadObserver =
+                transferUtility.download(
+                        "s3Folder/s3Key.txt",
+                        new File("/path/to/file/localFile.txt"));
+
+        // Attach a listener to the observer to get state update and progress notifications
+        downloadObserver.setTransferListener(new TransferListener() {
+
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (TransferState.COMPLETED == state) {
+                    // Handle a completed upload.
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                float percentDonef = ((float)bytesCurrent/(float)bytesTotal) * 100;
+                int percentDone = (int)percentDonef;
+
+                Log.d(LOG_TAG, "   ID:" + id + "   bytesCurrent: " + bytesCurrent + "   bytesTotal: " + bytesTotal + " " + percentDone + "%");
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                // Handle errors
+            }
+
+        });
+
+        // If you prefer to poll for the data, instead of attaching a
+        // listener, check for the state and progress in the observer.
+        if (TransferState.COMPLETED == downloadObserver.getState()) {
+            // Handle a completed upload.
+        }
+
+        Log.d(LOG_TAG, "Bytes Transferrred: " + downloadObserver.getBytesTransferred());
+        Log.d(LOG_TAG, "Bytes Total: " + downloadObserver.getBytesTotal());
+    }
+
 
     private boolean checkIsTablet() {
         Display display = this.getWindowManager().getDefaultDisplay();
