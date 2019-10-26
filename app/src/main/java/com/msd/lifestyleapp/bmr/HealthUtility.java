@@ -104,7 +104,7 @@ public class HealthUtility {
             age--;
         }
 
-        Integer ageInt = new Integer(age);
+        Integer ageInt = Integer.valueOf(age);
         String ageS = ageInt.toString();
 
         return ageS;

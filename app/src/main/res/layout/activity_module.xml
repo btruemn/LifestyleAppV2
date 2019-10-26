@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.ModuleActivity">
+    android:baselineAligned="false" tools:context=".controller.ModuleActivity">
 
     <FrameLayout
         android:id="@+id/current_module"

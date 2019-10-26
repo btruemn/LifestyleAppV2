@@ -9,25 +9,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:textSize="28sp">
 
         <ImageView
             android:id="@+id/imageView8"
-            android:layout_width="178dp"
-            android:layout_height="168dp"
+            android:layout_width="199dp"
+            android:layout_height="144dp"
             android:layout_gravity="center"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="300dp"
             app:srcCompat="@drawable/steps" />
 
         <TextView
             android:id="@+id/tv_data"
             android:layout_width="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
             android:text="Steps go here"
             android:textColor="@color/colorWhite"
-            android:textSize="20sp" />
+            android:textSize="28sp" />
 
     </LinearLayout>
 

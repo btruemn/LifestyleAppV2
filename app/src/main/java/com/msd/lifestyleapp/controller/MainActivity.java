@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         // Get a new or existing ViewModel from the ViewModelProvider.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         AWSMobileClient.getInstance().initialize(this).execute();
-        uploadWithTransferUtility();
-        downloadWithTransferUtility();
+//        uploadWithTransferUtility();
+//        downloadWithTransferUtility();
 
     }
 
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         TransferObserver downloadObserver =
                 transferUtility.download(
                         "s3Folder/s3Key.txt",
-                        new File("/path/to/file/localFile.txt"));
+                        new File("/Users/alexcsloan/Desktop/LifestyleAppV2/app/src/main/res/raw/localFile.txt"));
 
         // Attach a listener to the observer to get state update and progress notifications
         downloadObserver.setTransferListener(new TransferListener() {

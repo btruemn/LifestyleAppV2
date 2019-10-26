@@ -305,6 +305,11 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void stepCounter(View view){
+        Intent stepCounterIntent = new Intent(HomeActivity.this, StepCounterActivity.class);
+        startActivity(stepCounterIntent);
+    }
+
 
     public void getNearbyHikes(View view) {
 
