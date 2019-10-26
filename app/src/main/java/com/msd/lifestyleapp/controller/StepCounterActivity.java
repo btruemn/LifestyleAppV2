@@ -21,6 +21,8 @@ public class StepCounterActivity extends AppCompatActivity {
     private SensorManager mSensorManager;
     private TextView mTvData;
     private Sensor mStepCounter;
+    private Sensor mLinearAccelerometer;
+
     private final double mThreshold = 10.0;
     long lastUpdate;
     boolean stepCounterOn = false;
@@ -46,7 +48,9 @@ public class StepCounterActivity extends AppCompatActivity {
         mTvData.setVisibility(View.INVISIBLE);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mLinearAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         mStepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
     }
 
     private SensorEventListener mListener = new SensorEventListener() {
@@ -99,12 +103,15 @@ public class StepCounterActivity extends AppCompatActivity {
         if (mStepCounter != null) {
             mSensorManager.registerListener(mListener, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
         }
+        if (mLinearAccelerometer != null) {
+            mSensorManager.registerListener(mListener, mLinearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mStepCounter != null) {
+        if (mStepCounter != null || mLinearAccelerometer != null) {
             mSensorManager.unregisterListener(mListener);
         }
     }
