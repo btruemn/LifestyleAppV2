@@ -45,7 +45,7 @@ public class StepCounterActivity extends AppCompatActivity {
         }
 
         mTvData = (TextView) findViewById(R.id.tv_data);
-        mTvData.setVisibility(View.INVISIBLE);
+        mTvData.setText("STEP COUNTER OFF");
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mLinearAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -59,13 +59,7 @@ public class StepCounterActivity extends AppCompatActivity {
         public void onSensorChanged(SensorEvent sensorEvent) {
             Sensor mySensor = sensorEvent.sensor;
 
-            if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                System.out.println("ACCELEROMETER DETECTED");
-            } else if (mySensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-                System.out.println("STEP COUNTER DETECTED");
-            }
-
-            if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            if (mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
                 //Get the acceleration rates along the x axis
                 now_x = sensorEvent.values[0];
 
@@ -76,18 +70,28 @@ public class StepCounterActivity extends AppCompatActivity {
                 if ((curTime - lastUpdate) > 1000 && dx > mThreshold) {
                     lastUpdate = curTime;
 
-                    System.out.println("DX: " + dx);
+//                    System.out.println("DX: " + dx);
 
-                    if (!stepCounterOn) stepCounterOn = true;
-                    else stepCounterOn = false;
+                    if (!stepCounterOn) {
+                        stepCounterOn = true;
+                        System.out.println("STEP COUNTER ON");
+                        mTvData.setText("STEP COUNTER ON");
+                    }
+                    else {
+                        stepCounterOn = false;
+                        System.out.println("STEP COUNTER OFF");
+                        mTvData.setText("STEP COUNTER OFF");
+                    }
                 }
 
                 last_x = now_x;
             }
 
             if (mySensor.getType() == Sensor.TYPE_STEP_COUNTER && stepCounterOn) {
+                System.out.println("counting steps");
+                System.out.println(sensorEvent.values[0]);
                 //start counting steps
-                mTvData.setText("" + String.valueOf(sensorEvent.values[0]));
+                mTvData.setText("" + String.valueOf((int)sensorEvent.values[0]));
             }
         }
 
