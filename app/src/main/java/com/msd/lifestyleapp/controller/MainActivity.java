@@ -41,12 +41,6 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isTablet;
     private UserViewModel userViewModel;
     private boolean usersExist;
-    private static final String LOG_TAG = MainActivity.class.getName();
-
-    private static final String encryptionKey           = "ABCDEFGHIJKLMNOP";
-    private static final String characterEncoding       = "UTF-8";
-    private static final String cipherTransformation    = "AES/CBC/PKCS5PADDING";
-    private static final String aesEncryptionAlgorithem = "AES";
 
     private AWSHandler awsHandler;
 
