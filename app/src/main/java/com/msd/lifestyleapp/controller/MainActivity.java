@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         awsHandler = new AWSHandler();
 
         //upload database
-        awsHandler.uploadWithTransferUtility("/data/data/com.msd.lifestyleapp/databases/awss3transfertable.db", this);
+        awsHandler.uploadWithTransferUtility("/data/data/com.msd.lifestyleapp/databases/awss3transfertable.db", this, "");
 
     }
 

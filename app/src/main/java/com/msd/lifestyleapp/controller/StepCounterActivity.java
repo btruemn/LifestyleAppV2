@@ -123,7 +123,7 @@ public class StepCounterActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    awsHandler.uploadWithTransferUtility(file.getAbsolutePath(), activity);
+                    awsHandler.uploadWithTransferUtility(file.getAbsolutePath(), activity, "steps");
                 }
             }
 

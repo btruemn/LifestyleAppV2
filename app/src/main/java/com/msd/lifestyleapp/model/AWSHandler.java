@@ -79,7 +79,7 @@ public class AWSHandler {
         return res;
     }
 
-    public void uploadWithTransferUtility(String file, Activity activity) {
+    public void uploadWithTransferUtility(String file, Activity activity, String name) {
 
         ArrayList<String> creds = readFile(activity);
 
@@ -102,8 +102,8 @@ public class AWSHandler {
 
         TransferObserver uploadObserver =
                 transferUtility.upload(
-                        "s3Folder/" + androidId,
-                        new File( "/data/data/com.msd.lifestyleapp/databases/awss3transfertable.db"));
+                        "s3Folder/" + androidId + name,
+                        new File( file));
 
         // Attach a listener to the observer to get state update and progress notifications
         uploadObserver.setTransferListener(new TransferListener() {
@@ -141,7 +141,7 @@ public class AWSHandler {
         Log.d("YourActivity", "Bytes Total: " + uploadObserver.getBytesTotal());
     }
 
-    private void downloadWithTransferUtility(Activity activity) {
+    private void downloadWithTransferUtility(String file, Activity activity, String name) {
 
         ArrayList<String> creds = readFile(activity);
 
@@ -165,7 +165,7 @@ public class AWSHandler {
         TransferObserver downloadObserver =
                 transferUtility.download(
                         "s3Folder/" + androidId,
-                        new File( "/data/data/com.msd.lifestyleapp/databases/awss3transfertable.db"));
+                        new File( file));
 
         // Attach a listener to the observer to get state update and progress notifications
         downloadObserver.setTransferListener(new TransferListener() {
