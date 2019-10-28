@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,6 +29,26 @@ public class SharedPreferencesHandler {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         editor = prefs.edit();
         gson = new Gson();
+    }
+
+    public void addTime(){
+        long oneHour = 3600000;
+        long now = System.currentTimeMillis();
+
+        String time = prefs.getString("time", "");
+
+        if(time.isEmpty()){
+            return;
+        }
+
+        Long prefTime = Long.parseLong(time);
+
+        if(now >= prefTime){
+            Long t = now + oneHour;
+            String entry = t.toString();
+            editor.putString("time", entry);
+            editor.commit();
+        }
     }
 
     public void addUser(User user){
