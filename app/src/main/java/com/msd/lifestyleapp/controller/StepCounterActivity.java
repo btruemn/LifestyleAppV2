@@ -112,18 +112,19 @@ public class StepCounterActivity extends AppCompatActivity {
                 if(backup){
                     float val = sensorEvent.values[0];
 
-                    File file = new File(activity.getBaseContext().getFilesDir(), "steps");
+                    File file = new File(activity.getBaseContext().getFilesDir(), "steps.txt");
 
                     // Write to a file.
                     BufferedWriter writer = null;
                     try {
                         writer = new BufferedWriter(new FileWriter(file));
-                        writer.write(Float.toString(val));
+                        writer.write("Total amount of steps: " + Float.toString(val));
+                        writer.flush();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
-                    awsHandler.uploadWithTransferUtility(file.getAbsolutePath(), activity, "steps");
+                    awsHandler.uploadWithTransferUtility("/data/data/com.msd.lifestyleapp/files/steps.txt", activity, "steps.txt");
                 }
             }
 

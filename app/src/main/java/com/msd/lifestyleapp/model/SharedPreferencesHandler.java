@@ -32,20 +32,19 @@ public class SharedPreferencesHandler {
     }
 
     public boolean addTime(){
-        long oneHour = 1000;
+        long oneHour = 3600000;
 
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-
-        editor.putString("time", currentTimestamp.toString());
-        editor.commit();
 
         String time = prefs.getString("time", "");
 
         Timestamp prefsTimestamp = Timestamp.valueOf(time);
+        System.out.println("PrefTime: " + prefsTimestamp.toString());
+        System.out.println("CurrentTime: " + currentTimestamp.toString());
 
         if(time.isEmpty() || currentTimestamp.compareTo(prefsTimestamp) > 0){
 
-            Timestamp newEntry = new Timestamp(currentTimestamp.getTime() + 1000);
+            Timestamp newEntry = new Timestamp(currentTimestamp.getTime() + oneHour);
             String newEntryString = newEntry.toString();
             System.out.println("WE MADE IT!!");
             editor.putString("time", newEntryString);
