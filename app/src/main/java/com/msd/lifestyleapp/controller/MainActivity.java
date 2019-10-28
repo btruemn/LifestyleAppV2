@@ -81,7 +81,14 @@ public class MainActivity extends AppCompatActivity {
         // Get a new or existing ViewModel from the ViewModelProvider.
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         AWSMobileClient.getInstance().initialize(this).execute();
-        uploadWithTransferUtility();
+
+        //upload database
+        uploadWithTransferUtility("/data/data/com.msd.lifestyleapp/databases/awss3transfertable.db");
+
+        //upload steps
+        uploadWithTransferUtility("steps.txt");
+
+
 //        downloadWithTransferUtility();
     }
 
@@ -132,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         return res;
     }
 
-    public void uploadWithTransferUtility() {
+    public void uploadWithTransferUtility(String file) {
 
         ArrayList<String> creds = readFile();
 
