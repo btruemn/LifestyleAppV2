@@ -31,24 +31,30 @@ public class SharedPreferencesHandler {
         gson = new Gson();
     }
 
-    public void addTime(){
+    public boolean addTime(){
         long oneHour = 3600000;
         long now = System.currentTimeMillis();
 
         String time = prefs.getString("time", "");
 
+        Long t = now + oneHour;
+        String entry = t.toString();
+
         if(time.isEmpty()){
-            return;
+            editor.putString("time", entry);
+            editor.commit();
+            return false;
         }
 
         Long prefTime = Long.parseLong(time);
 
         if(now >= prefTime){
-            Long t = now + oneHour;
-            String entry = t.toString();
             editor.putString("time", entry);
             editor.commit();
+            return true;
         }
+
+        return false;
     }
 
     public void addUser(User user){
